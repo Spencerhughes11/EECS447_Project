@@ -18,14 +18,16 @@ import {
 import { Link } from "react-router-dom";
 
 import { BiUserCircle } from "react-icons/bi";
+import Login from "../pages/login.js";
 
+const loginsignup = () => {
 
-
+}
 
 export default function Header() {
   // TEMP ACCOUNT HOLDERS
   const accountOptions = ["insta", "facebook", "twitter"];
-
+  const [signedin, setsignedin] = useState(false);
   const [account, setAccount] = useState('ACCOUNT')
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -43,7 +45,11 @@ export default function Header() {
     setAccount(account);
   };
   
+  const [seen, setSeen] = useState(false);
 
+  function togglePop() {
+    setSeen(!seen);
+  };
   return (
     <div>
       <Navbar dark color="primary" expand="lg" full container="fluid" >
@@ -69,6 +75,7 @@ export default function Header() {
             <NavItem>
               <NavLink href="/temp">Other Page</NavLink>
             </NavItem>
+
           </Nav>
 
         </Collapse>
