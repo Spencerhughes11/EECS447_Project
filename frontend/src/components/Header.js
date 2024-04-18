@@ -1,23 +1,13 @@
 import React, { useState } from "react";
 import {
-  Collapse,
   Navbar,
-  NavbarToggler,
   NavbarBrand,
   Nav,
   NavItem,
   NavLink,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Dropdown,
-  Container,
   NavbarText,
 } from "reactstrap";
 
-import { Link } from "react-router-dom";
-
-import { BiUserCircle } from "react-icons/bi";
 import Login from "../pages/login.js";
 
 const loginsignup = () => {
@@ -25,25 +15,12 @@ const loginsignup = () => {
 }
 
 export default function Header() {
-  // TEMP ACCOUNT HOLDERS
-  const accountOptions = ["insta", "facebook", "twitter"];
   const [signedin, setsignedin] = useState(false);
   const [account, setAccount] = useState('ACCOUNT')
-  const [isOpen, setIsOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   
-  const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
 
-  const toggleDD = () => setDropdownOpen((prevState) => !prevState);
   
-  const toggleAccountDD = () => setAccountDropdownOpen((prevState) => !prevState);
-
-  const toggleNav = () => setIsOpen(!isOpen);
-
-// CHANGE TYPE when using account ?
-  const handleDropdownChange = (account) => {
-    setAccount(account);
-  };
   
   const [seen, setSeen] = useState(false);
 
@@ -52,7 +29,7 @@ export default function Header() {
   };
   return (
     <div>
-      <Navbar dark color="primary" expand="lg" full container="fluid" >
+      <Navbar dark color="primary" expand="lg" container="fluid" >
         <NavbarBrand href="/">
         <img
             alt="logo"
@@ -62,8 +39,6 @@ export default function Header() {
             }}
           />
         </NavbarBrand>
-        <NavbarToggler onClick={toggleNav} />
-        <Collapse isOpen={isOpen} navbar>
         <Nav navbar className="d-flex m-auto align-items-center justify-content-center">
             <NavbarText>447</NavbarText>
           </Nav>
@@ -78,7 +53,6 @@ export default function Header() {
 
           </Nav>
 
-        </Collapse>
       </Navbar>
     </div>
   );
