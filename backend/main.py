@@ -14,7 +14,7 @@ def index():
         if not table:
             return jsonify({'error': 'Table name not provided'})
         
-        connection = mysql.connector.connect(host='192.168.56.1', user='root', password='', database='447')
+        connection = mysql.connector.connect(host='localhost', user='root', password='', database='447')
 
         if connection.is_connected():
             print('Connected successfully')

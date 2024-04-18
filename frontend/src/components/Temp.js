@@ -20,19 +20,20 @@ export default function Temp() {
         }
     };
 
-    // useEffect(() => {
-    fetchData();
-    // }, []);
+    useEffect(() => {
+        fetchData();
+    }, []);
 
     // Check if responseData is null
-    if (!responseData) {
-        return <div>Loading...</div>;
-    }
+    // if (!responseData) {
+    //     return <div>Loading...</div>;
+    // }
     let data = JSON.stringify(responseData);
 
-    return (
-        <div>
-            <p>Response Data: {data}</p>
-        </div>
-    );
+    return data;
+    // return (
+    //     <div>
+    //         <p>Response Data: {data}</p>
+    //     </div>
+    // );
 }

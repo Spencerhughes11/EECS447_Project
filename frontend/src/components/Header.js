@@ -8,25 +8,9 @@ import {
   NavbarText,
 } from "reactstrap";
 
-import Login from "../pages/login.js";
-
-const loginsignup = () => {
-
-}
 
 export default function Header() {
-  const [signedin, setsignedin] = useState(false);
-  const [account, setAccount] = useState('ACCOUNT')
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  
 
-  
-  
-  const [seen, setSeen] = useState(false);
-
-  function togglePop() {
-    setSeen(!seen);
-  };
   return (
     <div>
       <Navbar dark color="primary" expand="lg" container="fluid" >
