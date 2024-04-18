@@ -28,6 +28,24 @@
   color: #61dafb;
 }
 
+.login {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin-right: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  position: fixed;
+  right: 0;
+}
+
+
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -36,3 +54,4 @@
     transform: rotate(360deg);
   }
 }
+
