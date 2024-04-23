@@ -13,14 +13,26 @@ def index():
     else:
         print('Failed to connect')
 
-    mycursor = connection.cursor()
+    mycursor = connection.cursor(dictionary=True)
 
-    mycursor.execute("SELECT * FROM cruise")
+    mycursor.execute(f"SELECT * FROM ship")
 
-    myresult = mycursor.fetchall()
+    columns = mycursor.column_names
 
+    data = mycursor.fetchall()
+
+    # for x in results:
+    #     print(x)
+
+    mycursor.close()
+    connection.close()
+    
+    response = {
+        'columns': columns,
+        'data': data
+    }
     # for x in myresult:
-    print(jsonify(myresult))
+    print(response)
 
     mycursor.close()
     connection.close()

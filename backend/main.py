@@ -9,10 +9,10 @@ CORS(app)
 def index():
     try:
         data = request.get_json()  # Get JSON data from request
-        table = data.get('table')
+        query = data.get('query')
 
-        if not table:
-            return jsonify({'error': 'Table name not provided'})
+        if not query:
+            return jsonify({'error': 'query name not provided'})
         
         connection = mysql.connector.connect(host='localhost', user='root', password='', database='447')
 
@@ -21,19 +21,26 @@ def index():
         else:
             print('Failed to connect')
 
-        mycursor = connection.cursor()
+        mycursor = connection.cursor(dictionary=True)
 
-        mycursor.execute(f"SELECT * FROM {table}")
+        mycursor.execute(f"{query}")
 
-        results = mycursor.fetchall()
+        columns = mycursor.column_names
+
+        data = mycursor.fetchall()
 
         # for x in results:
         #     print(x)
 
         mycursor.close()
         connection.close()
+        
+        response = {
+            'columns': columns,
+            'data': data
+        }
 
-        return jsonify({ 'results': results })
+        return response
 
     except Exception as e:
         return jsonify({'error': str(e)})
