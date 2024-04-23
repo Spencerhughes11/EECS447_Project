@@ -4,15 +4,18 @@ import { Link, useNavigate } from "react-router-dom";
 // components
 import Header from '../components/Header'
 import Login from './login.js';
+import Temp from '../components/Temp'
 
 
 
 export default function Home() {
 
     const [seen, setSeen] = useState(true);
+    let navigate = useNavigate();
 
     function togglePop() {
       setSeen(!seen);
+    //   navigate('./temp');
     };
 
     return(
