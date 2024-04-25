@@ -13,7 +13,7 @@ export default function Header() {
 
   return (
     <div>
-      <Navbar dark color="primary" expand="lg" container="fluid" >
+      <Navbar dark color="primary" expand="lg" container="fluid" className="mb-2">
         <NavbarBrand href="/">
         <img
             alt="logo"
@@ -32,7 +32,7 @@ export default function Header() {
               <NavLink href="/">Home</NavLink>
             </NavItem>
             <NavItem>
-              <NavLink href="/temp">Other Page</NavLink>
+              <NavLink href="/mlb">MLB</NavLink>
             </NavItem>
 
           </Nav>
