@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 // components
 import Header from '../components/Header'
 import Login from './login.js';
-import Temp from '../components/Temp'
+import Query from '../components/queries.js'
 
 
 
@@ -15,7 +15,7 @@ export default function Home() {
 
     function togglePop() {
       setSeen(!seen);
-    //   navigate('./temp');
+    //   navigate('./mlb');
     };
 
     return(
