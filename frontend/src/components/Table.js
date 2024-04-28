@@ -12,7 +12,7 @@ function SortableTableFunc({ columns, data }) {
     } = useTable({ columns, data }, useSortBy);
 
     return (
-        <Table {...getTableProps()}>
+        <Table {...getTableProps()} className='rounded'>
             <thead>
                 {headerGroups.map(headerGroup => (
                     <tr {...headerGroup.getHeaderGroupProps()}>
@@ -54,7 +54,7 @@ export default function SortableTable({ responseData }) {
     return (
         <Container >
             <h2>Table</h2>
-            <SortableTableFunc columns={columns} data={data} />
+            <SortableTableFunc columns={columns} data={data} className='rounded'/>
         </Container>
     );
 }
