@@ -6,13 +6,11 @@ import { Container, Form, FormFeedback, FormGroup,
 import './login.css';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/UserContext.js";
-import Header from "../components/Header.js";
 
 
-function Login(props) {
+
+export default function SignUp(props) {
     let navigate = useNavigate();
-    let auth = useAuth();
-
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [first, setFirst] = useState('');
@@ -25,8 +23,11 @@ function Login(props) {
     const [loggedInUser, setLoggedInUser] = useState(false);
     const [loggedInID, setLoggedInID] = useState(false);
     
-    const {user, setUser, isLoggedIn, setIsLoggedIn, login, register} = useAuth();
-
+    const {user,
+            setUser,
+            isLoggedIn,
+            setIsLoggedIn} = useAuth();
+    // // error handling
     // TODO: Change back to 8
     const tooShort = password.length < 4;
     let notMatching = false;
@@ -47,16 +48,14 @@ function Login(props) {
             const res = await response.json();
             setRes(res);
             if (res.error) {
-                navigate('/login');
+                navigate('/signup');
                 alert(res.error);
             } else {
                 // alert(`Welcome, '${username}'!`)
                 setUser(res.user.username);
                 setIsLoggedIn(true);
-                localStorage.setItem('user', JSON.stringify(res.user.username));
-                console.log('user: ', localStorage.getItem('user'));
-                navigate('/', {replace: true});
-
+                navigate('/login');
+ 
             }
 
             console.log('res: ', res);
@@ -64,31 +63,15 @@ function Login(props) {
             console.error('Error fetching data: ', error);
         }
     };
-    // useEffect(() => {
-    //     console.log(user);
-    //     console.log(isLoggedIn);
-    // }, [user, isLoggedIn]);
+
     // const userData = {
 
     // // };
-    // useEffect(() => {
-    //     const loggedInUser = localStorage.getItem('user');
-    //     if (loggedInUser) {
-    //         const foundUser = JSON.parse(loggedInUser);
-    //         setUser(foundUser);
-    //     }
-    // }, []);
     
-    
-    
-    function handleLogin(e) {
-        e.preventDefault();
-        // props.toggle();
-    }
-
     function handlesignup() {
-        // setShowsignup(!showSignUp);
-        navigate('/signup');
+        setShowsignup(!showSignUp);
+        navigate('/login');
+        
     }
 
     function registeruser() {
@@ -101,26 +84,14 @@ function Login(props) {
             method: 'signup'
         }
         fetchData(userData);
-
-    }
-
-    function loginuser() {
-        login(username, password);
-
     }
 
     return (
-        <div>
-        <div>
-            <Header  />
-        </div>
         <Container className="popup">
-            
-            {/* {isLoggedIn ? (<span>Username: {user} </span>) : null} */}
+            {isLoggedIn ? (<span>Username: {user} </span>) : null}
             <div className="popup-inner">
-                {showSignUp ? (
 
-                    <Form onSubmit={handleLogin}>
+                    <Form onSubmit={registeruser}>
                         <h2 className="mb-4">Sign Up</h2>
                         <Label className="text-start">
                             First Name
@@ -170,27 +141,10 @@ function Login(props) {
                         <span onClick={handlesignup} style={{ display: 'block', cursor: 'pointer', textDecoration: 'underline' }}>Have an account? Log in here</span>
                         <button onClick={registeruser} type="submit">Sign Up</button>
                     </Form>
-                ) : (
-                    <Form onSubmit={handleLogin}>
-                    <h2>Login</h2>
-
-                        <Label>
-                            Username:
-                            <Input type="text" value={username} onChange={e => setUsername(e.target.value)} />
-                        </Label>
-                        <Label>
-                            Password:
-                            <Input type="password" value={password} onChange={e => setPassword(e.target.value)} />
-                        </Label>
-                        <span onClick={handlesignup} style={{ display: 'block', cursor: 'pointer', textDecoration: 'underline' }}>Don't have an account? Sign up here</span>
-                        <Button onClick={loginuser} type="submit">Login</Button>
-                    </Form>
-                )}
-                <button type="close" onClick={props.toggle}>Close</button>
+                
                 
             </div>
         </Container>
-    </div>
     )
+
 }
-export default Login

@@ -78,9 +78,7 @@ export default function MLB() {
              'sl_avg_spin', 'cu_avg_spin'].map(col => ({ label: col, value: col }));
     return (
       <div>
-         <div>
-                <Header />
-        </div>
+      
         <h1>MLB Stats</h1>
         <Row className="m-3 w-75 d-flex align-items-center justify-content-center">
             <Col>
