@@ -18,13 +18,7 @@ export default function Home() {
     //   setSeen(!seen);
       navigate('/');
     };
-    function logout() {
-        console.log("userhome", localStorage.getItem('user'));
 
-        localStorage.removeItem('user');
-        console.log("userhome", localStorage.getItem('user'));
-        navigate('/login', {replace: true});
-    };
 
     return(
         <div>
@@ -34,10 +28,7 @@ export default function Home() {
             <Container className="d-flex h-100 ">         
                 {/* Username: @{username} */}
             </Container>
-            <Container>
-                <Button className='align-items-start' onClick={logout}>Logout</Button>
-                {/* {seen ? <Login toggle={togglePop} /> : null} */}
-            </Container>
+            
             <Container>
                 
                 <button className='login' onClick={togglePop}>Login/signup</button>

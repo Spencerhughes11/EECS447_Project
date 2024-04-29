@@ -6,7 +6,7 @@ import { Container, Form, FormFeedback, FormGroup,
 import './login.css';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/UserContext.js";
-
+import Header from "../components/Header.js";
 
 
 export default function SignUp(props) {
@@ -47,13 +47,14 @@ export default function SignUp(props) {
             });
             const res = await response.json();
             setRes(res);
+            // console.log(res)
             if (res.error) {
                 navigate('/signup');
                 alert(res.error);
             } else {
                 // alert(`Welcome, '${username}'!`)
-                setUser(res.user.username);
-                setIsLoggedIn(true);
+                // setUser(res.user.username);
+                // setIsLoggedIn(true);
                 navigate('/login');
  
             }
@@ -69,7 +70,7 @@ export default function SignUp(props) {
     // // };
     
     function handlesignup() {
-        setShowsignup(!showSignUp);
+        // setShowsignup(!showSignUp);
         navigate('/login');
         
     }
@@ -87,11 +88,15 @@ export default function SignUp(props) {
     }
 
     return (
+        <div>
+        <div>
+            <Header  />
+        </div>
         <Container className="popup">
             {isLoggedIn ? (<span>Username: {user} </span>) : null}
             <div className="popup-inner">
 
-                    <Form onSubmit={registeruser}>
+                    <Form className='sign' onSubmit={handlesignup}>
                         <h2 className="mb-4">Sign Up</h2>
                         <Label className="text-start">
                             First Name
@@ -145,6 +150,8 @@ export default function SignUp(props) {
                 
             </div>
         </Container>
+        </div>
+    
     )
 
 }

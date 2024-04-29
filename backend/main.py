@@ -159,11 +159,15 @@ def login():
                 session['loggedin'] = True
                 session['id'] = user['id']
                 session['username'] = user['username']
+                session['first'] = user['first']
+                session['last'] = user['last']
                 return jsonify({
                     "message": "Logged in successfully",
                     "user": {
                         "id": user['id'],
-                        "username": user['username']
+                        "username": user['username'],
+                        "first": user['first'],
+                        "last": user['last'],
                     }
                     }
                     ), 200

@@ -15,11 +15,11 @@ export function UserProvider (props) {
     let navigate = useNavigate();
 
     useEffect(() => {
-        const loggedInUser = localStorage.getItem('user');
+        const loggedInUser = sessionStorage.getItem('user');
         if (loggedInUser) {
             const foundUser = JSON.parse(loggedInUser);
-            setUser(foundUser);
-            setIsLoggedIn(true);
+            // setUser(foundUser);
+            // setIsLoggedIn(true);
         }
     }, [user]);
 
@@ -41,9 +41,9 @@ export function UserProvider (props) {
             } else {
                 setUser(res.user.username);
                 setIsLoggedIn(true);
-                localStorage.setItem('user', JSON.stringify(res.user.username));
-                console.log(isLoggedIn);
-                console.log('userlocal: ', localStorage.getItem('user'));
+                sessionStorage.setItem('user', JSON.stringify(res.user));
+                console.log(res);
+                console.log('usersession: ', sessionStorage.getItem('user'));
                 navigate('/', {replace: true});
 
             }
@@ -86,7 +86,7 @@ export function RequireUser() {
     let auth = useAuth();
     let location = useLocation();
     
-    console.log('isLo', auth.isLoggedIn);
+    // console.log('isLo', auth.isLoggedIn);
 
     return auth.isLoggedIn ? (
       <Format>
