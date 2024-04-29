@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useState} from 'react';
 import { useTable, useSortBy } from 'react-table';
-import { Container, Table } from 'reactstrap';
+import { Container, Table, Button } from 'reactstrap';
+import PlayerCard from './PlayerCard';
 
-function SortableTableFunc({ columns, data }) {
+function SortableTableFunc({ columns, data, selectedPlayer, setSelectedPlayer }) {
+    // const [selectedPlayer, setSelectedPlayer] = useState(null);
+
     const {
         getTableProps,
         getTableBodyProps,
@@ -12,8 +15,8 @@ function SortableTableFunc({ columns, data }) {
     } = useTable({ columns, data }, useSortBy);
 
     return (
-        <Table {...getTableProps()} className='rounded'>
-            <thead>
+    <Table hover striped  {...getTableProps()}>
+            <thead  style={{ borderRadius: '5px', backgroundColor: '#f8f9fa', color: '#333' }}>
                 {headerGroups.map(headerGroup => (
                     <tr {...headerGroup.getHeaderGroupProps()}>
                         {headerGroup.headers.map(column => (
@@ -33,8 +36,17 @@ function SortableTableFunc({ columns, data }) {
                     return (
                         <tr {...row.getRowProps()}>
                             {row.cells.map(cell => (
-                                <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                            ))}
+                            <td {...cell.getCellProps()}>
+                                {cell.column.id === 'NAME' ? (  // Assuming 'playerName' is the column id for player names
+                                    <Button size='sm' color='link'   onClick={() => setSelectedPlayer(cell.value)}>
+                                        {cell.render('Cell')}
+                                    </Button>
+                                ) : (
+                                    cell.render('Cell')
+                                )}
+                            </td>
+                        ))}
+
                         </tr>
                     );
                 })}
@@ -48,13 +60,23 @@ export default function SortableTable({ responseData }) {
         Header: col,
         accessor: col,
     })), [responseData.columns]);
+    const [selectedPlayer, setSelectedPlayer] = useState(null);
 
     const data = React.useMemo(() => responseData.data, [responseData.data]);
 
     return (
-        <Container >
-            <h2>Table</h2>
-            <SortableTableFunc columns={columns} data={data} className='rounded'/>
-        </Container>
+        <div style={{width: '15%', margin: '2em'}}>
+            <Container>
+            {selectedPlayer && <PlayerCard player={selectedPlayer} />}
+
+            </Container>
+           <SortableTableFunc 
+                columns={columns} 
+                data={data} 
+                selectedPlayer={selectedPlayer} 
+                setSelectedPlayer={setSelectedPlayer}
+            />
+
+        </div>
     );
 }

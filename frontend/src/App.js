@@ -9,6 +9,8 @@ import Test from './pages/Test.js';
 import { UserProvider, RequireUser } from './auth/UserContext.js';
 import Login from './pages/login.js';
 import SignUp from './pages/SignUp';
+import NBA from './pages/NBA.jsx';
+import Profile from './pages/Profile';
 
 
 function App() {
@@ -20,7 +22,9 @@ function App() {
           <Route element={<RequireUser />}>
             <Route path="/" element={<Home />} />
             <Route path="/mlb" element={<MLB />} />
+            <Route path="/nba" element={<NBA />} />
             <Route path="/test" element={<Test />} />
+            <Route path="/profile" element={<Profile />} />
           </Route>
           <Route index path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
