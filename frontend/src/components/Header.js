@@ -14,7 +14,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 export default function Header({user}) {
   let username = localStorage.getItem('user') ? localStorage.getItem('user').replace(/['"]+/g, '') : '';
   let navigate = useNavigate();
-  
+
   function logout() {
     console.log("userhome", localStorage.getItem('user'));
   
@@ -43,6 +43,9 @@ export default function Header({user}) {
           <Container>
             <NavLink className='text-light' to="/mlb">MLB</NavLink>
           </Container>
+          <Container>
+            <NavLink className='text-light' to="/nba">NBA</NavLink>
+          </Container>
 
         </Nav>
           {localStorage.getItem('user') && 
@@ -51,6 +54,9 @@ export default function Header({user}) {
           </Nav>
           }
         <Nav className="mr-auto justify-content-space-between" navbar>
+          <Container className="mr-5">
+            <NavLink className='text-light' to="/profile" >Profile</NavLink>
+          </Container>
           <Container className="mr-5">
             <NavLink className='text-light' to="/login" onClick={logout}>Logout</NavLink>
           </Container>

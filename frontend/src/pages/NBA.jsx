@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Col, Container, Row, 
         Button, Table,Form, FormGroup, Input, Label} from "reactstrap";
 import Query from '../components/queries';
-import Header from '../components/Header';
+import NBAQuery from "../components/NBAQueries";
 // import DropdownMenu, {
 //     DropdownItemCheckbox,
 //     DropdownItemCheckboxGroup,
@@ -10,7 +10,7 @@ import Header from '../components/Header';
 import Select from 'react-select';
 
 
-export default function MLB() {
+export default function NBA() {
     // const [requestData, setRequestData] = useState(null);
 
     // // let handleRequest 
@@ -23,9 +23,10 @@ export default function MLB() {
     //     </Container>
     // );
     const [selectedYear, setSelectedYear] = useState({label: '2024', value: '2024'});
-    const [selectedTeam, setSelectedTeam] = useState({ label: 'Kansas City Royals', value: 'Kansas City Royals' });
-    const [selectedPositions, setSelectedPosition] = useState();
+    const [selectedTeam, setSelectedTeam] = useState({ label: 'Team(s)', value: 'all' });
+    const [selectedPosition, setSelectedPosition] = useState({ label: 'Position', value: 'all'});
     const [selectedCols, setSelectedCols] = useState([]);
+    const [selectedColValues, setSelectedColValues] = useState([]);
 
     const handleYearChange = (selectedOption) => {
       setSelectedYear(selectedOption);
@@ -37,9 +38,20 @@ export default function MLB() {
       setSelectedPosition(selectedOption);
     };
     const handleColsChange = (selectedOption) => {
-      setSelectedCols(selectedOption);
-    };
-  
+        setSelectedCols(selectedOption);
+        // console.log('selected cols obj: ', selectedCols);
+      };
+
+      useEffect(() => {
+        // console.log('selCols', selectedCols);
+        if (selectedCols.length > 0) {
+          const selectedColValues = selectedCols.map(col => col.value);
+        //   console.log('selectedColValues: ', selectedColValues);
+          setSelectedColValues(selectedColValues);
+        }
+      }, [selectedCols]);
+      
+      
     const [showTable, setShowTable] = useState(false);
     const [tableData, setTableData] = useState(null);
     const [requestData, setRequestData] = useState()
@@ -48,52 +60,52 @@ export default function MLB() {
             // const requestData = { table: 'ship' };
         //     const responseData = await Temp(requestData);
             let queryInfo = {
-                // table: selectedPositions,
-                year: selectedYear.value,
-                // team: selectedTeam,
-                // cols: selectedCols,
+                position: selectedPosition.value,
+                // year: selectedYear.value,
+                team: selectedTeam.value,
+                cols: selectedColValues,
             }
-            // console.log(queryInfo.year.value);
+            // console.log(queryInfo.cols);
             setRequestData(queryInfo);
             setShowTable(true);
         //     console.log(tableData);
         // } catch (error) {
         //     console.error('Error fetching data: ', error);
-        console.log('Clicked');
         // }
     };
     const years = ['2015', '2016', '2017', '2018', '2019', '2020',
-                   '2021', '2022', '2023', '2024', 'all'].map(year => ({ label: year, value: year }));
+                   '2021', '2022', '2023', '2024', '*'].map(year => ({ label: year, value: year }));
+    const positions = ['G', 'F', 'C', 'G-F', 'F-C', 'all'].map(position => ({ label: position, value: position }));
     const teams = [
-        "Arizona Diamondbacks", "Atlanta Braves", "Baltimore Orioles", "Boston Red Sox",
-        "Chicago White Sox", "Chicago Cubs", "Cincinnati Reds", "Cleveland Guardians",
-        "Colorado Rockies", "Detroit Tigers", "Houston Astros", "Kansas City Royals",
-        "Los Angeles Angels","Los Angeles Dodgers","Miami Marlins", "Milwaukee Brewers",
-        "Minnesota Twins", "New York Yankees", "New York Mets", "Oakland Athletics",
-        "Philadelphia Phillies", "Pittsburgh Pirates", "San Diego Padres", "San Francisco Giants",
-        "Seattle Mariners", "St. Louis Cardinals", "Tampa Bay Rays", "Texas Rangers", "Toronto Blue Jays",
-        "Washington Nationals"].map(team => ({ label: team, value: team }));
+        "Atl", "Bos", "Bro", "Cha",
+        "Chi", "Cle", "Dal", "Den", "Det",
+        "Gol", "Hou", "Ind", "Lac", "Lal",
+        "Mem", "Mia", "Mil", "Min", "Nor",
+        "Nyk", "Okc", "Orl", "Phi", "Pho",
+        "Por", "Sac",  "San",  "Tor",
+        "Uta", "Was", 'all'
+    ].map(team => ({ label: team, value: team }));
+                   
 
-    const cols = ['year', 'p_game', 'p_formatted_ip', 'ff_avg_speed', 'ff_avg_spin',
-             'sl_avg_spin', 'cu_avg_spin'].map(col => ({ label: col, value: col }));
+    const cols =['TEAM','POS','AGE','GP','MPG','USG%','TO%','FTA','FT%','2PA','2P%','3PA','3P%',
+        'eFG%','TS%','PPG','RPG','APG','SPG','BPG','TPG','P+R','P+A','P+R+A','VI','ORtg','DRtg','PER','OWS',
+        'DWS','WS','WS/48','VORP']
+    .map(col => ({ label: col, value: col.replace(/['"]+/g, '')}));
     return (
       <div>
-      
-        <h1 className="m-4">MLB Stats</h1>
+        
+        <h1 className="m-4">NBA Stats</h1>
         <Row className="m-3 w-75 d-flex align-items-center justify-content-center">
             <Col>
                 <Select
                 // isMulti
                 name="position"
-                options={[
-                    {label: 'Hitters', value: 'stats'},
-                    {label: 'Pitchers', value: 'stats'}
-                ]}
+                options={positions}
                 onChange={handlePositionChange}
-                value={selectedPositions}
+                value={selectedPosition}
                 />
              </Col>
-            <Col>
+            {/* <Col>
                 <Select
                 // isMulti
                 name="years"
@@ -101,7 +113,7 @@ export default function MLB() {
                 onChange={handleYearChange}
                 value={selectedYear}
                 />
-             </Col>
+             </Col> */}
             <Col>
                 <Select
                 // isMulti
@@ -125,7 +137,7 @@ export default function MLB() {
             </Col>
         </Row>
         {showTable &&  (
-            <Query requestData={requestData} />             // **NOT currently using requestData as param
+            <NBAQuery requestData={requestData} />             // **NOT currently using requestData as param
 
         )}
       </div>

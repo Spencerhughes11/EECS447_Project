@@ -9,8 +9,9 @@ app.secret_key = 'ea49kjad92kd023dnpq321'
 
 CORS(app)
 
-@app.route('/', methods=['POST'])
-def query():
+
+@app.route('/mlb', methods=['POST'])
+def mlb():
     try:
         data = request.get_json()  # Get JSON data from request
         query = data.get('query')
@@ -49,6 +50,71 @@ def query():
     except Exception as e:
         return jsonify({'error': str(e)})
     
+""" ======================================== NBA ======================================== """
+
+@app.route('/nba', methods=['POST'])
+def nba():
+    try:
+        data = request.get_json()  # Get JSON data from request
+        # query = data.get('query')
+        position = data.get('position')
+        cols = data.get('cols')
+        team = data.get('team')
+
+        if not position:
+            return jsonify({'error': 'query name not provided'})
+
+        
+        connection = mysql.connector.connect(host='localhost', user='root', password='', database='447')
+
+        if connection.is_connected():
+            print('Connected successfully')
+        else:
+            print('Failed to connect')
+
+        mycursor = connection.cursor(dictionary=True)
+        # mycursor.execute(query)
+        # mycursor.execute(f'SELECT Name, TEAM, `USG%` FROM nbastats')
+        if not cols:
+            columns = "*"
+        else:
+            cols.insert(0, 'DISTINCT NAME')          # always include names
+            cols = [f"`{col}`" if '%' in col or '+' in col else col for col in cols]
+            columns = ', '.join(cols)
+            print(columns)
+            
+        if position == 'all' and team == 'all':
+            query = f'SELECT {columns} FROM nbastats'
+        elif position != 'all' and team == 'all':
+            query = f'SELECT {columns} FROM nbastats WHERE POS = "{position}"'
+        elif team != 'all' and position == 'all':
+            query = f'SELECT {columns} FROM nbastats WHERE TEAM = "{team}"'
+        else:
+            query = f'SELECT {columns} FROM nbastats WHERE TEAM = "{team}" and POS = "{position}"'
+        mycursor.execute(query)
+        columns = mycursor.column_names
+
+        data = mycursor.fetchall()
+
+        # for x in results:
+        #     print(x)
+
+        mycursor.close()
+        connection.close()
+        
+        response = {
+            'columns': columns,
+            'data': data,
+            'message': f'Successfully passed query: {query}'
+        }
+
+        return response
+
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    
+""" ======================================== LOGIN/SESSIONS ======================================== """
+    
 """ Authenticate users """
 @app.route('/login', methods=['POST'])
 def login():
@@ -62,7 +128,7 @@ def login():
 
         if not username or not password:
             return jsonify({'error': 'Username or password not provided'})
-        
+
         connection = mysql.connector.connect(host='localhost', user='root', password='', database='447')
 
         if connection.is_connected():
