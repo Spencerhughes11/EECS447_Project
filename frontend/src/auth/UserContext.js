@@ -86,9 +86,8 @@ export function RequireUser() {
     let auth = useAuth();
     let location = useLocation();
     
-    // console.log('isLo', auth.isLoggedIn);
 
-    return auth.isLoggedIn ? (
+    return auth ? (
       <Format>
         <Outlet />
       </Format>

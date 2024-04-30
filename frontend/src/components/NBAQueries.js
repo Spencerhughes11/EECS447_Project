@@ -7,13 +7,13 @@ import { Col, Container, Row, Input,
 
 export default function NBAQuery(queryData) {
     const [responseData, setResponseData] = useState(null);
-
-    const fetchData = async (requestData) => {
+    // console.log('QD', queryData);
+    const fetchData = async (queryData) => {
         try {
             const response = await fetch('http://127.0.0.1:5000/nba', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(requestData),
+                body: JSON.stringify(queryData),
             });
             const data = await response.json();
             setResponseData(data);
@@ -23,14 +23,7 @@ export default function NBAQuery(queryData) {
         }
     };
     
-    const requestData = {
-        // query: (queryData && queryData.requestData && queryData.requestData.position === 'all') ? 
-        //     'SELECT * FROM nbastats' : 
-        //     `SELECT * FROM nbastats WHERE POS = '${queryData.requestData.position}' LIMIT 15`
-        position: queryData.requestData.position,
-        cols: queryData.requestData.cols,
-        team: queryData.requestData.team,
-    };
+    const requestData = queryData.requestData;
     
     useEffect(() => {
         // console.log(requestData);

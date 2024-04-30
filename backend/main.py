@@ -56,13 +56,21 @@ def mlb():
 def nba():
     try:
         data = request.get_json()  # Get JSON data from request
-        # query = data.get('query')
-        position = data.get('position')
+        # query = data.get('query')\
+        print(data)
+        table = data.get('table')
         cols = data.get('cols')
         team = data.get('team')
-
-        if not position:
-            return jsonify({'error': 'query name not provided'})
+        if table == 'Players':
+            position = data.get('position')
+        elif table == 'Teams':
+            year = int(data.get('year')) if data.get('year') != 'all' else data.get('year')
+            playoffs = data.get('playoffs')
+            print(type(year))
+        else:
+            return jsonify({'error': 'invalid table name'})
+        # if not position:
+        #     return jsonify({'error': 'query name not provided'})
 
         
         connection = mysql.connector.connect(host='localhost', user='root', password='', database='447')
@@ -74,23 +82,44 @@ def nba():
 
         mycursor = connection.cursor(dictionary=True)
         # mycursor.execute(query)
-        # mycursor.execute(f'SELECT Name, TEAM, `USG%` FROM nbastats')
+        # mycursor.execute(f'SELECT Name, TEAM, `USG%` FROM nbaplayers')
         if not cols:
             columns = "*"
         else:
             cols.insert(0, 'DISTINCT NAME')          # always include names
             cols = [f"`{col}`" if '%' in col or '+' in col else col for col in cols]
             columns = ', '.join(cols)
-            print(columns)
-            
-        if position == 'all' and team == 'all':
-            query = f'SELECT {columns} FROM nbastats'
-        elif position != 'all' and team == 'all':
-            query = f'SELECT {columns} FROM nbastats WHERE POS = "{position}"'
-        elif team != 'all' and position == 'all':
-            query = f'SELECT {columns} FROM nbastats WHERE TEAM = "{team}"'
-        else:
-            query = f'SELECT {columns} FROM nbastats WHERE TEAM = "{team}" and POS = "{position}"'
+            # print(columns)
+        if table == 'Players':
+            if position == 'all' and team == 'ALL':
+                query = f'SELECT {columns} FROM nbaplayers'
+            elif position != 'all' and team == 'ALL':
+                query = f'SELECT {columns} FROM nbaplayers WHERE POS = "{position}"'
+            elif team != 'all' and position == 'all':
+                query = f'SELECT {columns} FROM nbaplayers WHERE TEAM = "{team}"'
+            else:
+                query = f'SELECT {columns} FROM nbaplayers WHERE TEAM = "{team}" and POS = "{position}"'
+        elif table == 'Teams':      # team table
+            # query = 'SELECT * FROM nbateams WHERE playoffs = "yes"'
+            if year == 'all' and team == 'ALL' and playoffs == 'both':
+                print('here')
+                query = f'SELECT {columns} FROM nbateams'
+            elif year != 'all' and team == 'ALL' and playoffs =='both':
+                query = f'SELECT {columns} FROM nbateams WHERE season = {year}'
+            elif team != 'ALL' and year == 'all' and playoffs == 'both':
+                query = f'SELECT {columns} FROM nbateams WHERE TEAM = "{team}"'
+            elif playoffs != 'both' and year == 'all' and team == 'ALL':
+                # print('here')
+                query = f'SELECT {columns} FROM nbateams WHERE playoffs = "{playoffs}"'
+            elif team != 'ALL' and year != 'all' and playoffs == 'both':
+                query = f'SELECT {columns} FROM nbateams WHERE TEAM = "{team}" and season = {year}'
+            elif playoffs != 'both' and year != 'all' and team == 'ALL':
+                query = f'SELECT {columns} FROM nbateams WHERE playoffs = "{playoffs}" and season = {year}'
+            elif playoffs != 'both' and year == 'all' and team != 'ALL':
+                query = f'SELECT {columns} FROM nbateams WHERE playoffs = "{playoffs}" AND TEAM = "{team}"'
+            else:
+                query = f'SELECT {columns} FROM nbateams WHERE playoffs = "{playoffs}" and season = {year} AND TEAM = "{team}"'
+                
         mycursor.execute(query)
         columns = mycursor.column_names
 
@@ -105,9 +134,8 @@ def nba():
         response = {
             'columns': columns,
             'data': data,
-            'message': f'Successfully passed query: {query}'
+            'message': f'Successfully returned query: {query}'
         }
-
         return response
 
     except Exception as e:
