@@ -33,6 +33,7 @@ export default function Profile() {
         <Container className='p-3 text-start d-flex justify-content-center'>
             
             <ReactRoundedImage image={image} />
+        </Container>
             {!image ?
             <div>
                 <input className='w-25'
@@ -42,7 +43,6 @@ export default function Profile() {
                 onChange={handleImageChange}
                 />
             </div> : <></>}
-        </Container>
         <Container>
 
 
