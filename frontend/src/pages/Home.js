@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Header from '../components/Header'
 import Login from './login.js';
 import Query from '../components/queries'
+import isLoggedIn from './login.js';
 
 
 
@@ -39,7 +40,7 @@ export default function Home() {
                 {/* {seen ? <Login toggle={togglePop} /> : null} */}
             </Container>
             <Container>
-                
+                {/* {isLoggedIn ? } */}
                 <button className='login' onClick={togglePop}>Login/signup</button>
                 {/* {seen ? <Login toggle={togglePop} /> : null} */}
             </Container>

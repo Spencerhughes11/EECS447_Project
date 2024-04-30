@@ -8,6 +8,7 @@ import NBAQuery from "../components/NBAQueries";
 //     DropdownItemCheckboxGroup,
 //   } from '@atlaskit/dropdown-menu';
 import Select from 'react-select';
+import AddToFavorites from '../components/SetFavorites';
 
 
 export default function NBA() {
@@ -73,6 +74,7 @@ export default function NBA() {
         //     console.error('Error fetching data: ', error);
         // }
     };
+
     const years = ['2015', '2016', '2017', '2018', '2019', '2020',
                    '2021', '2022', '2023', '2024', '*'].map(year => ({ label: year, value: year }));
     const positions = ['G', 'F', 'C', 'G-F', 'F-C', 'all'].map(position => ({ label: position, value: position }));
@@ -134,6 +136,9 @@ export default function NBA() {
              </Col>
              <Col>
                  <Button onClick={toggleTable}>Get Table</Button>
+            </Col>
+            <Col>
+                 {/* <Button onClick={() => AddToFavorites(requestData)}>add to favorites</Button> */}
             </Col>
         </Row>
         {showTable &&  (

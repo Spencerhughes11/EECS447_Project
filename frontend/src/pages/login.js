@@ -33,8 +33,9 @@ function Login(props) {
     if (password !== confirmPassword) {
         notMatching = true;
     }
-
-
+    if (isLoggedIn) {
+        navigate('/');
+    }
     const handleBlur = () => setTouched(true);
 
     const fetchData = async (userData) => {
@@ -53,6 +54,7 @@ function Login(props) {
                 // alert(`Welcome, '${username}'!`)
                 setUser(res.user.username);
                 setIsLoggedIn(true);
+                
                 localStorage.setItem('user', JSON.stringify(res.user.username));
                 console.log('user: ', localStorage.getItem('user'));
                 navigate('/', {replace: true});
