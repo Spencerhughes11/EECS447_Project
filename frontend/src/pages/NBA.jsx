@@ -23,9 +23,11 @@ export default function NBA() {
     //     </Container>
     // );
     const [selectedYear, setSelectedYear] = useState({label: 'all', value: 'all'});
+    const [selectedTeam1, setSelectedTeam1] = useState({ label: 'Team(s)', value: 'ALL' });
     const [selectedTeam, setSelectedTeam] = useState({ label: 'Team(s)', value: 'ALL' });
     const [selectedPosition, setSelectedPosition] = useState({ label: 'Position', value: 'all'});
-    const [selectedCols, setSelectedCols] = useState([]);
+    const [selectedPlayerCols, setSelectedPlayerCols] = useState([]);
+    const [selectedTeamCols, setSelectedTeamCols] = useState([]);
     const [selectedColValues, setSelectedColValues] = useState([]);
     const [selectedType, setSelectedType] = useState({ label: 'Choose a Table', value: 'Players'});
     const [playoffs, setPlayoffs] = useState({ label: 'Playoffs', value: 'both'});
@@ -33,19 +35,27 @@ export default function NBA() {
     const handleYearChange = (selectedOption) => {
       setSelectedYear(selectedOption);
     };
+    const handleTeamChange1 = (selectedOption) => {
+      setSelectedTeam1(selectedOption);
+    };
     const handleTeamChange = (selectedOption) => {
       setSelectedTeam(selectedOption);
     };
     const handlePositionChange = (selectedOption) => {
       setSelectedPosition(selectedOption);
     };
-    const handleColsChange = (selectedOption) => {
-        setSelectedCols(selectedOption);
+    const handlePlayerCols = (selectedOption) => {
+        setSelectedPlayerCols(selectedOption);
+        // console.log('selected cols obj: ', selectedCols);
+      };
+    const handleTeamCols = (selectedOption) => {
+        setSelectedTeamCols(selectedOption);
         // console.log('selected cols obj: ', selectedCols);
       };
     const handleTypeChange = (selectedOption) => {
         setSelectedType(selectedOption);
         // console.log('selected type: ', selectedType);
+        setSelectedColValues([]);
       };
       
       // TEAM Stuff
@@ -57,12 +67,17 @@ export default function NBA() {
       
       useEffect(() => {
         // console.log('selCols', selectedCols);
-        if (selectedCols.length > 0) {
-          const selectedColValues = selectedCols.map(col => col.value);
+        if (selectedPlayerCols.length > 0) {
+          const selectedColValues = selectedPlayerCols.map(col => col.value);
         //   console.log('selectedColValues: ', selectedColValues);
           setSelectedColValues(selectedColValues);
         }
-      }, [selectedCols]);
+        if (selectedTeamCols.length > 0) {
+          const selectedColValues = selectedTeamCols.map(col => col.value);
+        //   console.log('selectedColValues: ', selectedColValues);
+          setSelectedColValues(selectedColValues);
+        }
+      }, [selectedPlayerCols, selectedTeamCols]);
       
     let queryInfo;
     const [showTable, setShowTable] = useState(false);
@@ -111,11 +126,14 @@ export default function NBA() {
         "Uta", "Was", 'all'
     ].map(team => ({ label: team.toUpperCase(), value: team.toUpperCase() }));
     const type = ['Players', 'Teams'].map(type => ({label: type, value: type}))
-    const cols =['TEAM','POS','AGE','GP','MPG','USG%','TO%','FTA','FT%','2PA','2P%','3PA','3P%',
+    const playerCols =['TEAM','POS','AGE','GP','MPG','USG%','TO%','FTA','FT%','2PA','2P%','3PA','3P%',
         'eFG%','TS%','PPG','RPG','APG','SPG','BPG','TPG','P+R','P+A','P+R+A','VI','ORtg','DRtg','PER','OWS',
         'DWS','WS','WS/48','VORP']
     .map(col => ({ label: col, value: col.replace(/['"]+/g, '')}));
-
+    const teamCols = ["season","lg","TEAM","playoffs",
+    "age","w","l","pw","pl","mov","sos","srs","o_rtg","d_rtg","n_rtg","pace","f_tr",
+    "x3p_ar","ts_percent","e_fg_percent","tov_percent","orb_percent","ft_fga",
+    "opp_e_fg_percent","opp_tov_percent","opp_drb_percent","opp_ft_fga"].map(option => ({ label: option, value: option}))
     const playoff = ['yes', 'no', 'both'].map(option => ({ label: option, value: option}))
 
     return (
@@ -148,17 +166,17 @@ export default function NBA() {
                 // isMulti
                 name="team"
                 options={teams}
-                onChange={handleTeamChange}
-                value={selectedTeam}
+                onChange={handleTeamChange1}
+                value={selectedTeam1}
                 />
              </Col>
             <Col>
                 <Select
                 isMulti
                 name="league"
-                options={cols}
-                onChange={handleColsChange}
-                value={selectedCols}
+                options={playerCols}
+                onChange={handlePlayerCols}
+                value={selectedPlayerCols}
                 />
              </Col> 
              <Col>
@@ -198,9 +216,9 @@ export default function NBA() {
             <Select
             isMulti
             name="league"
-            options={cols}
-            onChange={handleColsChange}
-            value={selectedCols}
+            options={teamCols}
+            onChange={handleTeamCols}
+            value={selectedTeamCols}
             />
          </Col> 
          <Col>

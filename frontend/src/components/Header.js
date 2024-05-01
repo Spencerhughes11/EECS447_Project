@@ -24,6 +24,7 @@ export default function Header() {
   
     sessionStorage.removeItem('user');
     sessionStorage.removeItem('profilePic');
+    sessionStorage.removeItem('favorites');
     console.log("userhome", sessionStorage.getItem('user'));
     navigate('/login', {replace: true});
   };

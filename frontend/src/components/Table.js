@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState , useEffect} from 'react';
 import { useTable, useSortBy } from 'react-table';
 import { Container, Table, Button, Modal, ModalHeader, 
         ModalBody,ModalFooter, CardBody, CardText} from 'reactstrap';
@@ -11,14 +11,24 @@ import { MdFavoriteBorder } from "react-icons/md";
 function SortableTableFunc({ columns, data, selectedPlayer, setSelectedPlayer }) {
     // const [selectedPlayer, setSelectedPlayer] = useState(null);
     const [modal, setModal] = useState(false);
-    const [favorite, setFavorite] = useState(false);
+    const [favorites, setFavorites] = useState([]);
     const togglePlayer = () => {
         setModal(!modal);
         
     };
+
+    useEffect(() => {
+        sessionStorage.setItem('favorites', JSON.stringify(favorites));
+    }, [favorites]);
+    
     const toggleFavorite = () => {
-        setFavorite(!favorite);
-        // console.log(favorite);
+        if (favorites.includes(selectedPlayer.NAME)) {
+            setFavorites(favorites.filter(NAME => NAME !== selectedPlayer.NAME));
+        } else {
+            setFavorites([...favorites, selectedPlayer.NAME]);
+        }
+        // sessionStorage.setItem('favorites', favorites);
+
     };
     
     const {
@@ -28,6 +38,7 @@ function SortableTableFunc({ columns, data, selectedPlayer, setSelectedPlayer })
         rows,
         prepareRow,
     } = useTable({ columns, data }, useSortBy);
+    // console.log(favorites);
 
     return (
         <Container>
@@ -85,12 +96,12 @@ function SortableTableFunc({ columns, data, selectedPlayer, setSelectedPlayer })
                 </CardBody>
             </ModalBody>
             <ModalFooter>
-        {favorite ? 
-          <MdFavoriteBorder size={50} onClick={toggleFavorite} color='#e31b23'/> :
-          <MdFavorite size={50} onClick={toggleFavorite} color='#e31b23'/> }
-          <Button color="secondary" onClick={() => setSelectedPlayer(null)}>
+        {selectedPlayer && favorites.includes(selectedPlayer.NAME) ? 
+          <MdFavorite size={50} onClick={toggleFavorite} color='#e31b23'/> :
+          <MdFavoriteBorder size={50} onClick={toggleFavorite} color='#e31b23'/> }
+          {/* <Button color="secondary" onClick={() => setSelectedPlayer(null)}>
             Cancel
-          </Button>
+          </Button> */}
         </ModalFooter>
         </Modal>
         </Container>
@@ -106,6 +117,7 @@ export default function SortableTable({ responseData }) {
     const data = React.useMemo(() => responseData.data, [responseData.data]);
     // let name = selectedPlayer ? selectedPlayer.NAME : '';
     // console.log(name);
+    
     return (
         <div style={{width: '15%', margin: '2em'}}>
             {/* <Container>

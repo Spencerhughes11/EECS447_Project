@@ -8,7 +8,7 @@ import Login from './login.js';
 import Query from '../components/queries'
 
 import MLB from "../images/mlb.svg"
-import NBA from "../images/nba.png"
+import NBA from "../images/nba.webp"
 
 
 export default function Home() {
@@ -22,21 +22,29 @@ export default function Home() {
       navigate('/');
     };
 
+        function mlb() {
+            navigate('/mlb')
+        }
+        function nba() {
+            navigate('/nba')
+        }
 
     return(
-        <Container className="d-flex w-100 h-75 mt-5 justify-content-between align-items-center">
+        <Container className="d-flex w-100 h-75 mt-5 justify-content-center align-items-center">
             {/* <Container>
                 <Header  />
             </Container> */}
             {/* <Container className=" ">          */}
                <Row>
-                <Col className="h-25 mb-3">
-                <Card
+                <Col className="h-25 rounded  ">
+                <Card 
                     style={{
-                        width: '25rem'
+                        width: '25rem', 
+                        height: '30rem'
                     }}
                     >
-                    <img
+                    <img 
+                    style={{height: '50%'}}
                         alt="Sample"
                         src={NBA}
                     />
@@ -44,17 +52,17 @@ export default function Home() {
                         <CardTitle tag="h1">
                         NBA
                         </CardTitle>
-                        <CardSubtitle
+                        {/* <CardSubtitle
                         className="mb-2 text-muted"
                         tag="h6"
                         >
-                        Card subtitle
-                        </CardSubtitle>
+                        
+                        </CardSubtitle> */}
                         <CardText>
-                        Some quick example text to build on the card title and make up the bulk of the card‘s content.
+                        Enjoy player and team statistics dating back to 1980
                         </CardText>
-                        <Button>
-                        Button
+                        <Button onClick={nba}>
+                        Check it out
                         </Button>
                     </CardBody>
                     </Card>
@@ -62,10 +70,13 @@ export default function Home() {
                 <Col>
                     <Card
                     style={{
-                        width: '25rem'
+                        width: '25rem',
+                        height: '30rem'
+
                     }}
                     >
-                    <img
+                    <img 
+                    style={{height: '50%'}}
                         alt="Sample"
                         src={MLB}
                     />
@@ -73,17 +84,17 @@ export default function Home() {
                         <CardTitle tag="h1">
                         MLB
                         </CardTitle>
-                        <CardSubtitle
+                        {/* <CardSubtitle
                         className="mb-2 text-muted"
                         tag="h6"
                         >
                         Card subtitle
-                        </CardSubtitle>
+                        </CardSubtitle> */}
                         <CardText>
-                        Some quick example text to build on the card title and make up the bulk of the card‘s content.
+                        Enjoy player and team statistics dating back to 1980
                         </CardText>
-                        <Button>
-                        Button
+                        <Button onClick={mlb}>
+                        Check it out
                         </Button>
                     </CardBody>
                     </Card>

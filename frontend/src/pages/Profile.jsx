@@ -2,13 +2,14 @@ import React, {useState, useEffect} from 'react';
 import {Container, Input} from 'reactstrap';
 // import './Profile.css'
 import ReactRoundedImage from "react-rounded-image"
-// import MyPhoto from "../images/basketball.svg"
+import Image from "../images/basketball.svg"
 
 export default function Profile() {
     let user = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')) : '';
     let username = user.username;
     let firstName = user.first;
     let lastName = user.last;
+    let favorites = sessionStorage.getItem('favorites')  ? sessionStorage.getItem('favorites') : '';
   
     const [image, setImage] = useState(null);
 
@@ -32,9 +33,10 @@ export default function Profile() {
          <hr/>
         <Container className='p-3 text-start d-flex justify-content-center'>
             
-            <ReactRoundedImage image={image} />
+            {image ? 
+            <ReactRoundedImage image={Image} /> : <></>}
         </Container>
-            {!image ?
+            {/* {!image ? */}
             <div>
                 <input className='w-25'
                 type="file"
@@ -42,15 +44,15 @@ export default function Profile() {
                 accept='image/*'
                 onChange={handleImageChange}
                 />
-            </div> : <></>}
+            </div> 
         <Container>
 
 
                     <h4>Username: <code>{username}</code></h4>
                     <br/>
                     <h4>Name: <code>{firstName} {lastName}</code> </h4><br/>
-                    <h4>Favorite Teams: <code>Kansas City Royals, </code></h4><br/>
-                    <h4>Favorite Players: <code>Bobby Witt Jr, </code></h4><br/>
+                    <h4>Favorite Teams: <code></code></h4><br/>
+                    <h4>Favorite Players: <code>{favorites}</code></h4><br/>
                 </Container>
             </Container>
         </Container>
