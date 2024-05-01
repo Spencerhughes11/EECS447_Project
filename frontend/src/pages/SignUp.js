@@ -93,7 +93,6 @@ export default function SignUp(props) {
             <Header  />
         </div>
         <Container className="popup">
-            {isLoggedIn ? (<span>Username: {user} </span>) : null}
             <div className="popup-inner">
 
                     <Form className='sign' onSubmit={handlesignup}>
