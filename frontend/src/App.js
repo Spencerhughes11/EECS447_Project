@@ -10,6 +10,7 @@ import { UserProvider, RequireUser } from './auth/UserContext.js';
 import Login from './pages/login.js';
 import SignUp from './pages/SignUp';
 import NBA from './pages/NBA.jsx';
+import Community from './pages/community.js';
 import Profile from './pages/Profile';
 
 
@@ -23,6 +24,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/mlb" element={<MLB />} />
             <Route path="/nba" element={<NBA />} />
+            <Route path="/Community" element={<Community />} />
             <Route path="/test" element={<Test />} />
             <Route path="/profile" element={<Profile />} />
           </Route>

@@ -6,15 +6,73 @@ import PlayerCard from './PlayerCard';
 
 import { MdFavorite } from "react-icons/md";
 import { MdFavoriteBorder } from "react-icons/md";
+import Username from "../pages/Profile";
+import { useNavigate } from "react-router-dom";
 
 
 function SortableTableFunc({ columns, data, selectedPlayer, setSelectedPlayer }) {
     // const [selectedPlayer, setSelectedPlayer] = useState(null);
     const [modal, setModal] = useState(false);
     const [favorites, setFavorites] = useState([]);
+    const [res, setRes] = useState(null);
+    let navigate = useNavigate();
     const togglePlayer = () => {
         setModal(!modal);
         
+    };
+
+    const fetchDatasetfav = async (userData) => {
+        try {
+            const response = await fetch('http://127.0.0.1:5000/setfavplayer', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(userData),
+            });
+            const res = await response.json();
+            setRes(res);
+            // console.log(res)
+            if (res.error) {
+                navigate('/nba');
+                alert(res.error);
+            } else {
+                // alert(`Welcome, '${username}'!`)
+                // setUser(res.user.username);
+                // setIsLoggedIn(true);
+                
+ 
+            }
+
+            console.log('res: ', res);
+        } catch (error) {
+            console.error('Error fetching data: ', error);
+        }
+    };
+
+    const fetchDataremovefav = async (userData) => {
+        try {
+            const response = await fetch('http://127.0.0.1:5000/removefavplayer', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(userData),
+            });
+            const res = await response.json();
+            setRes(res);
+            // console.log(res)
+            if (res.error) {
+                navigate('/nba');
+                alert(res.error);
+            } else {
+                // alert(`Welcome, '${username}'!`)
+                // setUser(res.user.username);
+                // setIsLoggedIn(true);
+                
+ 
+            }
+
+            console.log('res: ', res);
+        } catch (error) {
+            console.error('Error fetching data: ', error);
+        }
     };
 
     useEffect(() => {
@@ -24,8 +82,34 @@ function SortableTableFunc({ columns, data, selectedPlayer, setSelectedPlayer })
     const toggleFavorite = () => {
         if (favorites.includes(selectedPlayer.NAME)) {
             setFavorites(favorites.filter(NAME => NAME !== selectedPlayer.NAME));
+            let user = sessionStorage.getItem('user');
+            let userData = JSON.parse(user);
+            let username = userData.username;
+            let removeDATA = {
+                user: username,
+                name: selectedPlayer.NAME,
+                team: selectedPlayer.TEAM,
+            }
+            fetchDataremovefav(removeDATA);
         } else {
             setFavorites([...favorites, selectedPlayer.NAME]);
+            let user = sessionStorage.getItem('user');
+            let userData = JSON.parse(user);
+            let username = userData.username;
+            
+            let favDATA = {
+                user: username,
+                name: selectedPlayer.NAME,
+                team: selectedPlayer.TEAM,
+                pos: selectedPlayer.POS,
+                ppg: selectedPlayer.PPG,
+                rpg: selectedPlayer.RPG,
+                apg: selectedPlayer.APG
+            };
+            fetchDatasetfav(favDATA);
+
+            // NEED TO FIX THIS SO THAT IT WILL SHOW UP AS FAVORITED WHEN RELOADING, THIS COULD BE DONE BY QUERYING THE FAV TABLE AND SET THOSE PLAYERS TO FAVORTIED
+            // WITH THE TOGGLE 
         }
         // sessionStorage.setItem('favorites', favorites);
 
@@ -97,7 +181,7 @@ function SortableTableFunc({ columns, data, selectedPlayer, setSelectedPlayer })
             </ModalBody>
             <ModalFooter>
         {selectedPlayer && favorites.includes(selectedPlayer.NAME) ? 
-          <MdFavorite size={50} onClick={toggleFavorite} color='#e31b23'/> :
+          <MdFavorite size={50} onClick={() => toggleFavorite(selectedPlayer?.NAME,selectedPlayer?.TEAM,selectedPlayer?.PPG,selectedPlayer?.RPG,selectedPlayer?.APG) } color='#e31b23'/> :
           <MdFavoriteBorder size={50} onClick={toggleFavorite} color='#e31b23'/> }
           {/* <Button color="secondary" onClick={() => setSelectedPlayer(null)}>
             Cancel

@@ -52,6 +52,9 @@ export default function Header() {
           <Container>
             <NavLink className='text-light' to="/nba">NBA</NavLink>
           </Container>
+          <Container>
+            <NavLink className='text-light' to="/community">COMMUNITY</NavLink>
+          </Container>
 
         </Nav>
           {sessionStorage.getItem('user') ? 

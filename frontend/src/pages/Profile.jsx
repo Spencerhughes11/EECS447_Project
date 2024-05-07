@@ -4,6 +4,8 @@ import {Container, Input} from 'reactstrap';
 import ReactRoundedImage from "react-rounded-image"
 import Image from "../images/basketball.svg"
 
+
+
 export default function Profile() {
     let user = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')) : '';
     let username = user.username;
@@ -12,6 +14,8 @@ export default function Profile() {
     let favorites = sessionStorage.getItem('favorites')  ? sessionStorage.getItem('favorites') : '';
   
     const [image, setImage] = useState(null);
+
+
 
     useEffect(() => {
         const storedImage = sessionStorage.getItem('profilePic');
