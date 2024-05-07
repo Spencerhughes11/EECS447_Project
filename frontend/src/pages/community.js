@@ -8,93 +8,38 @@ import Header from '../components/Header';
 //     DropdownItemCheckboxGroup,
 //   } from '@atlaskit/dropdown-menu';
 import Select from 'react-select';
+import Retreiveusers from "../components/getusers";
+import Userjoin from "../components/communityquery";
+
+
 
 
 export default function Fav() {
-    // const [requestData, setRequestData] = useState(null);
+  const [selectedPosition, setSelectedPosition] = useState({ label: 'position...', value: 'ALL' });
+  const [selectedTeam, setSelectedTeam] = useState({ label: 'Team..', value: 'ALL' });
+  const [selectedUser, setSelectedUser] = useState({ label: 'User..', value: 'ALL' });
+  const [selectedCols, setSelectedCols] = useState([]);
+  const [userData, setUserData] = useState([]);
+  const [showTable, setShowTable] = useState(false);
+  const [requestData, setRequestData] = useState();
 
-    // // let handleRequest 
-
-    // const responseData = Temp({requestData});
-    // let requestData = {table: 'ship'}
-    // return(
-    //     <Container className="vh-100 ">
-    //         <Button>Click</Button>
-    //     </Container>
-    // );
-    // function Retreiveusers() {
-    //   const [responseData, setResponseData] = useState(null);
-    //   // console.log('QD', queryData);
-    //   const fetchData = async () => {
-    //       try {
-    //           const response = await fetch('http://127.0.0.1:5000/retreiveusers', {
-    //               method: 'POST',
-    //               headers: { 'Content-Type': 'application/json' },
-    //               body: JSON.stringify('usercall'),
-    //           });
-    //           const data = await response.json();
-    //           setResponseData(data);
-    //           console.log(data.message);
-    //       } catch (error) {
-    //           console.error('Error fetching data: ', error);
-    //       }
-    //     }
-    //     return requestData
-    //   }
-
-    const [selectedPosition, setSelectedPosition] = useState({label: 'position...', value: 'ALL'});
-    const [selectedTeam, setSelectedTeam] = useState({ label: 'Team..', value: 'ALL' });
-    const [selectedUser, setSelectedUser] = useState({ label: 'User..', value: 'ALL' });
-    const [selectedCols, setSelectedCols] = useState([]);
-    const [userData, setUserData] = useState([]);
-      // Fetch user data from the backend when the component mounts
-// Fetch user data from the backend when the component mounts and when selectedUser changes
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const response = await fetch('http://127.0.0.1:5000/retreiveusers', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify('usercall'),
-          });
-          const data = await response.json();
-          if (typeof data === 'object' && data !== null) {
-            // Convert JSON response into a list
-            const userList = Object.values(data).map(user => ({
-              id: user.username, // Assuming each user object has an 'id' property
-              // name: user.first, // Assuming each user object has a 'name' property
-              // Add more properties as needed
-            }));
-            setUserData(userList); 
-          }
-          // Update requestData with fetched data
-          console.log(data.message);
-        } catch (error) {
-          console.error('Error fetching data: ', error);
-        }
-      };
-      fetchData(); // Call fetchData function
-    }, [selectedUser]); 
-
-
-    console.log("user data:", userData);
-
-    const handlepositionChange = (selectedOption) => {
-      setSelectedPosition(selectedOption);
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const data = await Retreiveusers();
+        setUserData(data || []);
+      } catch (error) {
+        console.error('Error fetching user data: ', error);
+      }
     };
-    const handleTeamChange = (selectedOption) => {
-      setSelectedTeam(selectedOption);
-    };
-    const handleUserChange = (selectedOption) => {
-      setSelectedUser(selectedOption);
-    };
-    const handleColsChange = (selectedOption) => {
-      setSelectedCols(selectedOption);
-    };
-  
-    const [showTable, setShowTable] = useState(false);
-    const [tableData, setTableData] = useState(null);
-    const [requestData, setRequestData] = useState()
+
+    fetchUserData();
+  }, []); // Fetch user data when the component mounts
+
+  const handlepositionChange = (selectedOption) => setSelectedPosition(selectedOption);
+  const handleTeamChange = (selectedOption) => setSelectedTeam(selectedOption);
+  const handleUserChange = (selectedOption) => setSelectedUser(selectedOption);
+  const handleColsChange = (selectedOption) => setSelectedCols(selectedOption);
     const toggleTable =  () => {
         // try {
             // const requestData = { table: 'ship' };
@@ -116,12 +61,8 @@ export default function Fav() {
     };
 
 
-    const users = userData.username;
-    // useEffect(() => {
-    //   // console.log(requestData);
-    //   Retreiveusers();
-    // }, [selectedUser]); 
 
+    // const userOptions = userData.map(user => ({ label: user.username, value: user.id }));
 
     const positions = ['G', 'F', 'C', 'G-F', 'F-C', 'all'].map(position => ({ label: position, value: position }));
     const teams = [
@@ -146,7 +87,7 @@ export default function Fav() {
                 name="user"
                 options={userData}
                 onChange={handleUserChange}
-                value={selectedUser}
+                value={selectedUser}   
                 />
              </Col>
             <Col>

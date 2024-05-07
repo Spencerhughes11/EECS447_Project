@@ -5,15 +5,15 @@ import { Col, Container, Row, Input,
     Dropdown, Table} from "reactstrap";
     import SortableTable from "./Table";
 
-export default function Userjoin(queryData) {
+export default function Retreiveusers() {
     const [responseData, setResponseData] = useState(null);
     // console.log('QD', queryData);
-    const fetchData = async (queryData) => {
+    const fetchData = async () => {
         try {
-            const response = await fetch('http://127.0.0.1:5000/Userjoin', {
+            const response = await fetch('http://127.0.0.1:5000/retreiveusers', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(queryData),
+                body: JSON.stringify('hello'),
             });
             const data = await response.json();
             setResponseData(data);
@@ -23,19 +23,17 @@ export default function Userjoin(queryData) {
         }
     };
     
-    const requestData = queryData.requestData;
+    // const requestData = queryData.requestData;
     
-    useEffect(() => {
-        // console.log(requestData);
-        fetchData(requestData);
-    }, [queryData]); // Run only once on component mount
+    // useEffect(() => {
+    //     // console.log(requestData);
+    //     fetchData(requestData);
+    // }, [queryData]); // Run only once on component mount
 
-    if (!responseData) {
-        return <div>Loading...</div>;
-    }
+
 
     return (
-        <SortableTable responseData={responseData} />
+        responseData
 
     );
 }
