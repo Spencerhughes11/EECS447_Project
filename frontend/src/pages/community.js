@@ -14,7 +14,7 @@ import Userjoin from "../components/communityquery";
 
 
 
-export default function Fav() {
+export default function Community() {
   const [selectedPosition, setSelectedPosition] = useState({ label: 'position...', value: 'ALL' });
   const [selectedTeam, setSelectedTeam] = useState({ label: 'Team..', value: 'ALL' });
   const [selectedUser, setSelectedUser] = useState({ label: 'User..', value: 'ALL' });
@@ -22,42 +22,27 @@ export default function Fav() {
   const [userData, setUserData] = useState([]);
   const [showTable, setShowTable] = useState(false);
   const [requestData, setRequestData] = useState();
+  // const requestData = {
+  //   'query': 'SELECT * FROM users'
+  // };
+  // useEffect(() => {
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const data = await Retreiveusers();
-        setUserData(data || []);
-      } catch (error) {
-        console.error('Error fetching user data: ', error);
-      }
-    };
+    // }
+//     fetchData().then(data => {
+//         setUserData(data || []);
+//     });
+// }, []); 
 
-    fetchUserData();
-  }, []); // Fetch user data when the component mounts
+let queryInfo;
 
   const handlepositionChange = (selectedOption) => setSelectedPosition(selectedOption);
   const handleTeamChange = (selectedOption) => setSelectedTeam(selectedOption);
   const handleUserChange = (selectedOption) => setSelectedUser(selectedOption);
   const handleColsChange = (selectedOption) => setSelectedCols(selectedOption);
     const toggleTable =  () => {
-        // try {
-            // const requestData = { table: 'ship' };
-        //     const responseData = await Temp(requestData);
-            let queryInfo = {
-                // table: selectedPositions,
-                // year: selectedYear.value,
-                // team: selectedTeam,
-                // cols: selectedCols,
-            }
-            // console.log(queryInfo.year.value);
-            setRequestData(queryInfo);
+
             setShowTable(true);
-        //     console.log(tableData);
-        // } catch (error) {
-        //     console.error('Error fetching data: ', error);
-        console.log('Clicked');
-        // }
+
     };
 
 
@@ -75,11 +60,12 @@ export default function Fav() {
                     "Uta", "Was", 'all'
                 ].map(team => ({ label: team.toUpperCase(), value: team.toUpperCase() }));
 
-    const cols = ['PPG', 'APG', 'RPG','ALL'].map(col => ({ label: col, value: col }));
+    const cols = ['PPG', 'APG', 'RPG','all'].map(col => ({ label: col, value: col }));
     return (
       <div>
       
-        <h1 className="m-4">Community Stats</h1>
+        <h1 className="m-3">Community</h1>
+        <h4 className="">See who other users favorite teams and players are</h4>
         <Row className="m-3 w-75 d-flex align-items-center justify-content-center">
             <Col>
                 <Select
@@ -121,9 +107,9 @@ export default function Fav() {
                  <Button onClick={toggleTable}>Get Table</Button>
             </Col>
         </Row>
-        {showTable &&  (
-            <Query requestData={requestData} />             // **NOT currently using requestData as param
-
+        {showTable && (
+            <Retreiveusers />             // **NOT currently using requestData as param
+          // <span>{Retreiveusers({requestData})}</span>
         )}
       </div>
     );

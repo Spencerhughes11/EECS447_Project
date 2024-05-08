@@ -211,6 +211,50 @@ def login():
 
     except Exception as e:
         return jsonify({'error': str(e)})
+    
+""" ======================================== RETRIEVE USERS ======================================== """
+
+
+@app.route('/retrieveusers', methods=['POST'])
+def users():
+    try:
+        req = request.get_json()  
+        # query = req.get('query')
+        # first = data.get('first')
+        print("qureqery", req)
+        # return jsonify({'message': 'Got req'})
+        if not req:
+            return jsonify({'error': 'Request not there'})
+
+        connection = mysql.connector.connect(host='localhost', user='root', password='', database='447')
+
+        if connection.is_connected():
+            print('Connected successfully')
+        else:
+            print('Failed to connect')
+
+        mycursor = connection.cursor(dictionary=True)
+
+        mycursor.execute(req)
+        columns = mycursor.column_names
+
+        data = mycursor.fetchall()
+
+        # for x in results:
+        #     print(x)
+
+        mycursor.close()
+        connection.close()
+        
+        response = {
+            'columns': columns,
+            'data': data,
+            # 'message': f'Successfully returned query: {query}'
+        }
+        return response
+
+    except Exception as e:
+        return jsonify({'error': str(e)})
 
 if __name__ == '__main__':
     app.run(debug=True)

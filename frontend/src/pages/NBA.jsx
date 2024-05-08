@@ -108,7 +108,7 @@ export default function NBA() {
             // console.log(queryInfo.cols);
             setRequestData(queryInfo);
             setShowTable(true);
-        //     console.log(tableData);
+            // console.log(requestData);
         // } catch (error) {
         //     console.error('Error fetching data: ', error);
         // }

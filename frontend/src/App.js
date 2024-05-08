@@ -24,7 +24,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/mlb" element={<MLB />} />
             <Route path="/nba" element={<NBA />} />
-            <Route path="/Community" element={<Community />} />
+            <Route path="/community" element={<Community />} />
             <Route path="/test" element={<Test />} />
             <Route path="/profile" element={<Profile />} />
           </Route>
