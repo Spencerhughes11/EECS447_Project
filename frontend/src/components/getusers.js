@@ -2,16 +2,17 @@ import React, { useState, useEffect } from "react";
 import SortableTable from "./Table";
 
 
-export default function Retreiveusers() {
+export default function Retreiveusers({ requestData }) {
     const [responseData, setResponseData] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const [users, setUsers] = useState([]);
+
 
     // console.log('QD', queryData);
     const fetchData = async (queryData) => {
         try {
             // setIsLoading(true);
 
-            const response = await fetch('http://127.0.0.1:5000/retrieveusers', {
+            const response = await fetch('http://127.0.0.1:5000/getfavplayer', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(queryData),
@@ -29,17 +30,17 @@ export default function Retreiveusers() {
 
         }
     };
-    // const requestData = queryData.requestData;
+    // const req = queryData.requestData;
     // if (!requestData) {
     //     return <div>Loading...</div>;
     // }
     useEffect(() => {
         // if (requestData) {
-            const queryData = 'SELECT id, first, last, username FROM users'
+            // const queryData = 'SELECT username FROM users'
 
-        // console.log(queryData);
+        console.log('req', requestData);
 
-          fetchData(queryData);
+          fetchData(requestData);
         // } else {
         //     return( <h1>Not good</h1>);
         // }

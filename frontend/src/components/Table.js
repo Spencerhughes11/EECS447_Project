@@ -13,7 +13,12 @@ import { useNavigate } from "react-router-dom";
 function SortableTableFunc({ columns, data, selectedPlayer, setSelectedPlayer }) {
     // const [selectedPlayer, setSelectedPlayer] = useState(null);
     const [modal, setModal] = useState(false);
-    const [favorites, setFavorites] = useState([]);
+    const [favorites, setFavorites] = useState(() => {
+        // Get the initial state from sessionStorage or set to default value
+        const saved = localStorage.getItem('favorites');
+        const initialState = JSON.parse(saved) || [];
+        return initialState;
+    });
     const [res, setRes] = useState(null);
     let navigate = useNavigate();
     const togglePlayer = () => {
@@ -21,7 +26,7 @@ function SortableTableFunc({ columns, data, selectedPlayer, setSelectedPlayer })
         
     };
 
-    const fetchDatasetfav = async (userData) => {
+    const setFav = async (userData) => {
         try {
             const response = await fetch('http://127.0.0.1:5000/setfavplayer', {
                 method: 'POST',
@@ -76,37 +81,46 @@ function SortableTableFunc({ columns, data, selectedPlayer, setSelectedPlayer })
     };
 
     useEffect(() => {
-        sessionStorage.setItem('favorites', JSON.stringify(favorites));
+        localStorage.setItem('favorites', JSON.stringify(favorites));
     }, [favorites]);
     
     const toggleFavorite = () => {
+        console.log("favs: ", favorites);
         if (favorites.includes(selectedPlayer.NAME)) {
             setFavorites(favorites.filter(NAME => NAME !== selectedPlayer.NAME));
             let user = sessionStorage.getItem('user');
             let userData = JSON.parse(user);
             let username = userData.username;
+            let userID = userData.id;
+
             let removeDATA = {
-                user: username,
-                name: selectedPlayer.NAME,
-                team: selectedPlayer.TEAM,
+                userID: userID,
+                username: username,
+                playerID: selectedPlayer.id,
+                type: 'remove'
             }
-            fetchDataremovefav(removeDATA);
+            setFav(removeDATA);
         } else {
             setFavorites([...favorites, selectedPlayer.NAME]);
             let user = sessionStorage.getItem('user');
             let userData = JSON.parse(user);
+            let userID = userData.id;
             let username = userData.username;
             
             let favDATA = {
-                user: username,
-                name: selectedPlayer.NAME,
-                team: selectedPlayer.TEAM,
-                pos: selectedPlayer.POS,
-                ppg: selectedPlayer.PPG,
-                rpg: selectedPlayer.RPG,
-                apg: selectedPlayer.APG
+                // user: username,
+                userID: userID,
+                username: username,
+                // name: selectedPlayer.NAME,
+                playerID: selectedPlayer.id,
+                type: 'add'
+                // team: selectedPlayer.TEAM,
+                // pos: selectedPlayer.POS,
+                // ppg: selectedPlayer.PPG,
+                // rpg: selectedPlayer.RPG,
+                // apg: selectedPlayer.APG
             };
-            fetchDatasetfav(favDATA);
+            setFav(favDATA);
 
             // NEED TO FIX THIS SO THAT IT WILL SHOW UP AS FAVORITED WHEN RELOADING, THIS COULD BE DONE BY QUERYING THE FAV TABLE AND SET THOSE PLAYERS TO FAVORTIED
             // WITH THE TOGGLE 
