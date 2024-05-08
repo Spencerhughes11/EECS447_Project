@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Col, Container, Row, Input, 
-    Button,  DropdownToggle,
-    DropdownMenu,  DropdownItem,
-    Dropdown, Table} from "reactstrap";
+
     import SortableTable from "./Table";
 
 export default function NBAQuery(queryData) {

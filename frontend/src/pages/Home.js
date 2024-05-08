@@ -3,9 +3,7 @@ import { Col, Container, Row, Nav, Navbar,
     Button, Card, CardBody, CardText, CardTitle, CardSubtitle } from "reactstrap";
 import { Link, useNavigate } from "react-router-dom";
 // components
-import Header from '../components/Header'
-import Login from './login.js';
-import Query from '../components/queries'
+
 
 import MLB from "../images/mlb.svg"
 import NBA from "../images/nba.webp"
