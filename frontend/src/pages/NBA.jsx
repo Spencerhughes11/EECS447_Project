@@ -222,7 +222,7 @@ export default function NBA() {
             />
          </Col> 
          <Col>
-             <Button onClick={toggleTable}>Get Table</Button>
+             <Button onClick={toggleTable}>Ge t Table</Button>
         </Col>
     </Row> }
         {showTable &&  (

@@ -33,15 +33,49 @@ export default function Community() {
 //     });
 // }, []); 
 
+const [users, setUsers] = useState([]);
+
+
+// console.log('QD', queryData);
+useEffect(() => {
+    const fetchData = async () => {
+        try {
+            const queryData = 'SELECT username FROM users';
+            const response = await fetch('http://127.0.0.1:5000/retrieveusers', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(queryData),
+            });
+            const data = await response.json();
+            setUsers(data);
+        } catch (error) {
+            console.error('Error fetching data: ', error);
+        }
+    };
+
+    fetchData();
+    
+}, []);
+
+
 let queryInfo;
 
   const handlepositionChange = (selectedOption) => setSelectedPosition(selectedOption);
   const handleTeamChange = (selectedOption) => setSelectedTeam(selectedOption);
   const handleUserChange = (selectedOption) => setSelectedUser(selectedOption);
   const handleColsChange = (selectedOption) => setSelectedCols(selectedOption);
+  let user = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')) : '';
+  let username = user.username;
     const toggleTable =  () => {
+      // setShowTable(false);
 
-            setShowTable(true);
+        queryInfo = {
+          currUser: username,
+          otherUser: selectedUser.value,
+        }
+        console.log(queryInfo)
+        setRequestData(queryInfo);
+        setShowTable(true);
 
     };
 
@@ -71,7 +105,7 @@ let queryInfo;
                 <Select
                 // isMulti
                 name="user"
-                options={userData}
+                options={users.map(user => ({ label: user.username, value: user.username }))}
                 onChange={handleUserChange}
                 value={selectedUser}   
                 />
@@ -108,7 +142,7 @@ let queryInfo;
             </Col>
         </Row>
         {showTable && (
-            <Retreiveusers />             // **NOT currently using requestData as param
+            <Retreiveusers requestData={requestData} />             // **NOT currently using requestData as param
           // <span>{Retreiveusers({requestData})}</span>
         )}
       </div>

@@ -11,7 +11,7 @@ export default function Profile() {
     let username = user.username;
     let firstName = user.first;
     let lastName = user.last;
-    let favorites = sessionStorage.getItem('favorites')  ? sessionStorage.getItem('favorites') : '';
+    let favorites = localStorage.getItem('favorites')  ? localStorage.getItem('favorites') : '';
   
     const [image, setImage] = useState(null);
 
