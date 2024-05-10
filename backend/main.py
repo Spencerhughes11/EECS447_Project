@@ -13,7 +13,7 @@ CORS(app)
 @app.route('/mlb', methods=['POST'])
 def mlb():
     try:
-        data = request.get_json()  # Get JSON data from request
+        data = request.get_json() 
         query = data.get('query')
 
         if not query:
@@ -34,8 +34,7 @@ def mlb():
 
         data = mycursor.fetchall()
 
-        # for x in results:
-        #     print(x)
+    
 
         mycursor.close()
         connection.close()
@@ -55,8 +54,7 @@ def mlb():
 @app.route('/nba', methods=['POST'])
 def nba():
     try:
-        data = request.get_json()  # Get JSON data from request
-        # query = data.get('query')\
+        data = request.get_json()  
         print(data)
         table = data.get('table')
         cols = data.get('cols')
@@ -69,8 +67,6 @@ def nba():
             print(type(year))
         else:
             return jsonify({'error': 'invalid table name'})
-        # if not position:
-        #     return jsonify({'error': 'query name not provided'})
 
         
         connection = mysql.connector.connect(host='localhost', user='root', password='', database='447')
@@ -81,15 +77,12 @@ def nba():
             print('Failed to connect')
 
         mycursor = connection.cursor(dictionary=True)
-        # mycursor.execute(query)
-        # mycursor.execute(f'SELECT Name, TEAM, `USG%` FROM nbaplayers')
         if not cols:
             columns = "*"
         else:
             cols.insert(0, 'DISTINCT NAME')          # always include names
             cols = [f"`{col}`" if '%' in col or '+' in col else col for col in cols]
             columns = ', '.join(cols)
-            # print(columns)
         if table == 'Players':
             if position == 'all' and team == 'ALL':
                 query = f'SELECT {columns} FROM nbaplayers'
@@ -100,16 +93,15 @@ def nba():
             else:
                 query = f'SELECT {columns} FROM nbaplayers WHERE TEAM = "{team}" and POS = "{position}"'
         elif table == 'Teams':      # team table
-            # query = 'SELECT * FROM nbateams WHERE playoffs = "yes"'
             if year == 'all' and team == 'ALL' and playoffs == 'both':
-                print('here')
+
                 query = f'SELECT {columns} FROM nbateams'
             elif year != 'all' and team == 'ALL' and playoffs =='both':
                 query = f'SELECT {columns} FROM nbateams WHERE season = {year}'
             elif team != 'ALL' and year == 'all' and playoffs == 'both':
                 query = f'SELECT {columns} FROM nbateams WHERE TEAM = "{team}"'
             elif playoffs != 'both' and year == 'all' and team == 'ALL':
-                # print('here')
+
                 query = f'SELECT {columns} FROM nbateams WHERE playoffs = "{playoffs}"'
             elif team != 'ALL' and year != 'all' and playoffs == 'both':
                 query = f'SELECT {columns} FROM nbateams WHERE TEAM = "{team}" and season = {year}'
@@ -124,9 +116,6 @@ def nba():
         columns = mycursor.column_names
 
         data = mycursor.fetchall()
-
-        # for x in results:
-        #     print(x)
 
         mycursor.close()
         connection.close()
@@ -147,7 +136,7 @@ def nba():
 @app.route('/login', methods=['POST'])
 def login():
     try:
-        data = request.get_json()  # Get JSON data from request
+        data = request.get_json()  
         first = data.get('first')
         last = data.get('last')
         username = data.get('username')
@@ -178,7 +167,7 @@ def login():
                 "INSERT INTO users (first, last, username, password) VALUES (%s, %s, %s, %s)",
                 (first, last, username, password)
             )
-            connection.commit()  # Commit the transaction
+            connection.commit()  
             
         else:
             mycursor.execute('SELECT * FROM users WHERE username = %s AND password = %s', (username, password,))
@@ -219,11 +208,8 @@ def login():
 def users():
     try:
         req = request.get_json()  
-        # query = req.get('query')
-        # first = data.get('first')
-        print("qureqery", req)
-        # return jsonify({'message': 'Got req'})
-        if not req:
+        query = req.get('query')
+        if not query:
             return jsonify({'error': 'Request not there'})
 
         connection = mysql.connector.connect(host='localhost', user='root', password='', database='447')
@@ -235,13 +221,9 @@ def users():
 
         mycursor = connection.cursor(dictionary=True)
 
-        mycursor.execute(req)
-        columns = mycursor.column_names
+        mycursor.execute(query)
 
         users = mycursor.fetchall()
-
-        # for x in results:
-        #     print(x)
 
         mycursor.close()
         connection.close()
@@ -250,6 +232,56 @@ def users():
         return response
     except Exception as e:
         return jsonify({'error': str(e)})
+    
+""" ======================================== RETRIEVE PERSONAL FAVS ======================================== """
+
+@app.route('/retrievefavs', methods=['POST'])
+def user_favs():
+    try:
+        req = request.get_json()  
+        username = req.get('username')
+        if not username:
+            return jsonify({'error': 'Request not there'})
+
+        connection = mysql.connector.connect(host='localhost', user='root', password='', database='447')
+
+        if connection.is_connected():
+            print('Connected successfully')
+        else:
+            print('Failed to connect')
+
+        mycursor = connection.cursor(dictionary=True)
+       
+        # get fav players
+        mycursor.execute(
+                f'SELECT np.NAME ' +
+                f'FROM fav_players fp ' +
+                f'JOIN nbaplayers np ON fp.player_id = np.id ' +
+                f'WHERE fp.username = "{username}"' 
+            )
+
+        players = mycursor.fetchall()
+        # get fav teams
+        mycursor.execute(
+                f'SELECT nt.NAME ' +
+                f'FROM fav_teams fp ' +
+                f'JOIN nbateams nt ON fp.team_id = nt.team_id ' +
+                f'WHERE fp.username = "{username}"' 
+            )
+
+        teams = mycursor.fetchall()
+
+        mycursor.close()
+        connection.close()
+        
+        response = {
+            'players': players,
+            'teams': teams,
+        }
+        return response
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    
 """ ======================================== FAVORITES ======================================== """
 
 ## ------------------------- FAV PLAYERS --------------------------
@@ -286,7 +318,7 @@ def fav_players():
                 "INSERT INTO fav_players (user_id, username, player_id) VALUES (%s, %s, %s)",
                 (user_id, username, player_id)    
         )
-            connection.commit()  # Commit the transaction
+            connection.commit()  # cvommit the transaction
             
         else:
             if not user_exists:
@@ -296,22 +328,13 @@ def fav_players():
             )
             
 
-            connection.commit()  # Commit the transaction
-        
-        # mycursor.execute()
-        # columns = mycursor.column_names
-
-        # data = mycursor.fetchall()
-
-        # for x in results:
-        #     print(x)
+            connection.commit()  
 
         mycursor.close()
         connection.close()
         
         response = {
-            # 'columns': columns,
-            # 'data': data,
+          
             'message': f'Successfully {method}ed user: "{username}" favorites with player: {player_id}'
         }
         return response
@@ -357,7 +380,7 @@ def fav_teams():
                 "INSERT INTO fav_teams (user_id, username, team_id) VALUES (%s, %s, %s)",
                 (user_id, username, team_id)    
         )
-            connection.commit()  # Commit the transaction
+            connection.commit()  
             
         else:
             if not user_exists:
@@ -367,23 +390,14 @@ def fav_teams():
             )
             
 
-            connection.commit()  # Commit the transaction
-        
-        # mycursor.execute()
-        # columns = mycursor.column_names
-
-        # data = mycursor.fetchall()
-
-        # for x in results:
-        #     print(x)
+            connection.commit()  #
 
         mycursor.close()
         connection.close()
         
         response = {
-            # 'columns': columns,
-            # 'data': data,
-            'message': f'Successfully {method}ed user: "{username}" favorites with player: {team_id}'
+ 
+            'message': f'Successfully {method}ed team "{team_id}" to user: "{username}" favorites'
         }
         return response
     
@@ -397,13 +411,11 @@ def fav_teams():
 def Userjoin():
     try:
         fav_data = request.get_json()  
-        # user_id = fav_data.get('userID')
         print(fav_data)
         curr_user = fav_data.get('currUser')
         other_user = fav_data.get('otherUser')
         table = fav_data.get('table')
-        # player_id = fav_data.get('playerID')
-        # method = fav_data.get('type')
+ 
         print(f"curr and other: {curr_user}, {other_user}")
         if not fav_data:
             return jsonify({'error': 'Request not there'})
@@ -434,13 +446,9 @@ def Userjoin():
             )
        
         
-        # mycursor.execute()
         columns = mycursor.column_names
 
         data = mycursor.fetchall()
-
-        # for x in results:
-        #     print(x)
 
         mycursor.close()
         connection.close()
@@ -448,7 +456,6 @@ def Userjoin():
         response = {
             'columns': columns,
             'data': data,
-            # 'message': f'Successfully {method}ed user: "{username}" favorites with player: {player_id}'
         }
         return response
     

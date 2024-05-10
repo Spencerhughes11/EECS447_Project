@@ -17,9 +17,7 @@ export function UserProvider (props) {
     useEffect(() => {
         const loggedInUser = sessionStorage.getItem('user');
         if (loggedInUser) {
-            const foundUser = JSON.parse(loggedInUser);
-            // setUser(foundUser);
-            // setIsLoggedIn(true);
+
         }
     }, [user]);
 
@@ -62,8 +60,7 @@ export function UserProvider (props) {
             password: password,
             method: 'signup'
         }
-        // fetchData(userData);
-        // ... rest of your fetchData function
+
     }
 
     const value = {

@@ -1,8 +1,6 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import { useState, useEffect} from "react";
-import { Container, Form, FormFeedback, FormGroup,
-       FormText, Label, Input, Button } from "reactstrap";
+import { useState} from "react";
+import { Container, Form, Label, Input, Button } from "reactstrap";
 import './login.css';
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/UserContext.js";
@@ -11,47 +9,20 @@ import Header from "../components/Header.js";
 
 function Login(props) {
     let navigate = useNavigate();
-    let auth = useAuth();
+  
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [first, setFirst] = useState('');
-    const [last, setLast] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [email, setEmail] = useState('');
-    const [showSignUp, setShowsignup] = useState(false);
-    const [res, setRes] = useState(null);
-    const [touched, setTouched] = useState(false);
-    const [loggedInUser, setLoggedInUser] = useState(false);
-    const [loggedInID, setLoggedInID] = useState(false);
+  
     
-    const {user, setUser, isLoggedIn, setIsLoggedIn, login, register} = useAuth();
-
-    // TODO: Change back to 8
-    const tooShort = password.length < 4;
-    let notMatching = false;
-    if (password !== confirmPassword) {
-        notMatching = true;
-    }
+    const {login} = useAuth();
 
 
-    const handleBlur = () => setTouched(true);
+    function handleLogin(e) {e.preventDefault(); }
 
-    
-    function handleLogin(e) {
-        e.preventDefault();
-        // props.toggle();
-    }
+    function handlesignup() {navigate('/signup');}
 
-    function handlesignup() {
-        // setShowsignup(!showSignUp);
-        navigate('/signup');
-    }
-
-    function loginuser() {
-        login(username, password);
-
-    }
+    function loginuser() {login(username, password); }
 
     return (
         <div>
@@ -59,10 +30,7 @@ function Login(props) {
             <Header  />
         </div>
         <Container className="popup">
-            
-            {/* {isLoggedIn ? (<span>Username: {user} </span>) : null} */}
             <div className="popup-inner">
-                
                     <Form onSubmit={handleLogin}>
                     <h2>Login</h2>
 

@@ -1,9 +1,7 @@
-import React, { useState } from "react";
+import React, {  } from "react";
 import {
   Navbar,
-  NavbarBrand,
   Nav,
-  NavItem, 
   NavbarText, Container
 } from "reactstrap";
 import { NavLink, useNavigate } from 'react-router-dom';
@@ -13,7 +11,6 @@ import { NavLink, useNavigate } from 'react-router-dom';
 
 export default function Header() {
   let user = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')) : '';
-  let username = user.username;
   let firstName = user.first;
   let lastName = user.last;
 
@@ -33,23 +30,12 @@ export default function Header() {
   return (
     <div>
       <Navbar dark color="primary" expand="lg" container="fluid" className="mb-2 p-2">
-        {/* <NavbarBrand to="/">
-        <img
-            alt="logo"
-            src={require("../images/basketball.svg")}
-            style={{
-              height: 40,
-            }}
-          />
-        </NavbarBrand> */}
+       
         <Nav className="mr-auto justify-content-space-between" navbar>
           <Container className="mr-5">
             <NavLink className='text-light' to="/">Home</NavLink>
           </Container>
 
-          <Container>
-            <NavLink className='text-light' to="/mlb">MLB</NavLink>
-          </Container>
           <Container>
             <NavLink className='text-light' to="/nba">NBA</NavLink>
           </Container>

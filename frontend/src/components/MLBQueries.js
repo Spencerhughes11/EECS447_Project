@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Col, Container, Row, Input, 
-    Button,  DropdownToggle,
-    DropdownMenu,  DropdownItem,
-    Dropdown, Table} from "reactstrap";
+
     import SortableTable from "./Table";
 
 export default function Query(queryData) {
@@ -17,12 +14,11 @@ export default function Query(queryData) {
             });
             const data = await response.json();
             setResponseData(data);
-            console.log('data: ', data);
         } catch (error) {
             console.error('Error fetching data: ', error);
         }
     };
-    
+    // TEST
     const requestData = {
         query: (queryData.requestData.year === 'all') ? 
             'SELECT * FROM stats LIMIT 15' : 
@@ -30,9 +26,8 @@ export default function Query(queryData) {
     };
     
     useEffect(() => {
-        // console.log(queryData);
         fetchData(requestData);
-    }, [queryData]); // Run only once on component mount
+    }, [queryData]); 
 
     if (!responseData) {
         return <div>Loading...</div>;
@@ -40,26 +35,6 @@ export default function Query(queryData) {
 
     return (
         <SortableTable responseData={responseData} />
-        // <Container>
-        //     <h2>Table</h2>
-        //     <Table>
-        //         <thead>
-        //             <tr>
-        //                 {responseData.columns.map((column, index) => (
-        //                     <th key={index}>{column}</th>
-        //                 ))}
-        //             </tr>
-        //         </thead>
-        //         <tbody>
-        //             {responseData.data.map((row, rowIndex) => (
-        //                 <tr key={rowIndex}>
-        //                     {responseData.columns.map((column, columnIndex) => (
-        //                         <td key={columnIndex}>{row[column]}</td>
-        //                     ))}
-        //                 </tr>
-        //             ))}
-        //         </tbody>
-        //     </Table>
-        // </Container>
+       
     );
 }
