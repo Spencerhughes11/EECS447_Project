@@ -429,22 +429,37 @@ def Userjoin():
 
         mycursor = connection.cursor(dictionary=True)
         if table == 'Players':
-            mycursor.execute(
-                f'SELECT fp.username, np.NAME, np.PPG, np.RPG, np.APG ' +
-                f'FROM fav_players fp ' +
-                f'JOIN fav_players fp2 ON fp.player_id = fp2.player_id  ' +
-                f'JOIN nbaplayers np ON fp.player_id = np.id ' +
-                f'WHERE fp2.username = "{curr_user}" and fp.username = "{other_user}"' 
-            )
+            if other_user == 'ALL':
+                mycursor.execute(
+                    f'SELECT fp.username, np.NAME, np.PPG, np.RPG, np.APG ' +
+                    f'FROM fav_players fp ' +
+                    f'JOIN fav_players fp2 ON fp.player_id = fp2.player_id  ' +
+                    f'JOIN nbaplayers np ON fp.player_id = np.id ' 
+                )
+            else:
+                mycursor.execute(
+                    f'SELECT fp.username, np.NAME, np.PPG, np.RPG, np.APG ' +
+                    f'FROM fav_players fp ' +
+                    f'JOIN fav_players fp2 ON fp.player_id = fp2.player_id  ' +
+                    f'JOIN nbaplayers np ON fp.player_id = np.id ' +
+                    f'WHERE fp2.username = "{curr_user}" and fp.username = "{other_user}"' 
+                )
         elif table == 'Teams':
-            mycursor.execute(
-                f'SELECT fp.username, np.NAME, np.TEAM, np.season ' +
-                f'FROM fav_teams fp ' +
-                f'JOIN fav_teams fp2 ON fp.team_id = fp2.team_id  ' +
-                f'JOIN nbateams np ON fp.team_id = np.team_id ' +
-                f'WHERE fp2.username = "{curr_user}" and fp.username = "{other_user}"' 
-            )
-       
+            if other_user == 'ALL':
+                mycursor.execute(
+                    f'SELECT fp.username, np.NAME, np.TEAM, np.season ' +
+                    f'FROM fav_teams fp ' +
+                    f'JOIN fav_teams fp2 ON fp.team_id = fp2.team_id  ' +
+                    f'JOIN nbateams np ON fp.team_id = np.team_id ' 
+                )
+            else:
+                mycursor.execute(
+                    f'SELECT fp.username, np.NAME, np.TEAM, np.season ' +
+                    f'FROM fav_teams fp ' +
+                    f'JOIN fav_teams fp2 ON fp.team_id = fp2.team_id  ' +
+                    f'JOIN nbateams np ON fp.team_id = np.team_id ' +
+                    f'WHERE fp2.username = "{curr_user}" and fp.username = "{other_user}"' 
+                )
         
         columns = mycursor.column_names
 
