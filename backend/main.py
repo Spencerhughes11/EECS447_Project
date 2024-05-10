@@ -330,6 +330,7 @@ def fav_teams():
         user_id = fav_data.get('userID')
         username = fav_data.get('username')
         team_id = fav_data.get('teamID')
+        print(f"team_id = {team_id}")
         method = fav_data.get('type')
 
         if not fav_data:
@@ -344,7 +345,7 @@ def fav_teams():
 
         mycursor = connection.cursor(dictionary=True)
         
-        mycursor.execute('SELECT * FROM fav_teams WHERE user_id = %s AND team_id = "%s"', (user_id, team_id))
+        mycursor.execute('SELECT * FROM fav_teams WHERE user_id = %s AND team_id = %s', (user_id, team_id))
         user_exists = mycursor.fetchone()
         
         if method == 'add':
@@ -362,7 +363,7 @@ def fav_teams():
             if not user_exists:
                 return jsonify({'error': 'Player/Team not favorited'})
             mycursor.execute(
-                f"DELETE FROM fav_teams WHERE user_id = {user_id} AND team_id = '{team_id}'"
+                f"DELETE FROM fav_teams WHERE user_id = {user_id} AND team_id = {team_id}"
             )
             
 
@@ -382,7 +383,7 @@ def fav_teams():
         response = {
             # 'columns': columns,
             # 'data': data,
-            'message': f'Successfully {method}ed user: "{username}" favorites with player: "{team_id}"'
+            'message': f'Successfully {method}ed user: "{username}" favorites with player: {team_id}'
         }
         return response
     
@@ -428,7 +429,7 @@ def Userjoin():
                 f'SELECT fp.username, np.NAME, np.TEAM, np.season ' +
                 f'FROM fav_teams fp ' +
                 f'JOIN fav_teams fp2 ON fp.team_id = fp2.team_id  ' +
-                f'JOIN nbateams np ON fp.team_id = np.TEAM ' +
+                f'JOIN nbateams np ON fp.team_id = np.team_id ' +
                 f'WHERE fp2.username = "{curr_user}" and fp.username = "{other_user}"' 
             )
        

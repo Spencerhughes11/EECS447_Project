@@ -123,7 +123,7 @@ function SortableTableFunc({ columns, data, selectedPlayer, setSelectedPlayer })
                 let removeDATA = {
                     userID: userID,
                     username: username,
-                    teamID: selectedPlayer.TEAM,
+                    teamID: selectedPlayer.team_id,
                     type: 'remove'
                 }
                 setteamFav(removeDATA);
@@ -145,18 +145,19 @@ function SortableTableFunc({ columns, data, selectedPlayer, setSelectedPlayer })
             let userID = userData.id;
             let username = userData.username;
             console.log('Selected player:', selectedPlayer);
-            if(selectedPlayer.id === undefined){
-
+            if(selectedPlayer.playid === undefined){
+                console.log(selectedPlayer)
             let favDATA = {
+                
                 // user: username,
                 userID: userID,
                 username: username,
                 // name: selectedPlayer.NAME,
-                teamID: selectedPlayer.TEAM,
+                teamID: selectedPlayer.team_id,
                 type: 'add'
 
             };
-            setteamFav(favDATA);
+            setteamFav(favDATA);   
         } else{
             let favDATA = {
                 // user: username,
