@@ -321,15 +321,86 @@ def fav_players():
     except Exception as e:
         return jsonify({'error': str(e)})
     
+#--------------------set fav team--------------------
+    
+@app.route('/setfavteam', methods=['POST'])
+def fav_teams():
+    try:
+        fav_data = request.get_json()  
+        user_id = fav_data.get('userID')
+        username = fav_data.get('username')
+        team_id = fav_data.get('teamID')
+        method = fav_data.get('type')
+
+        if not fav_data:
+            return jsonify({'error': 'Request not there'})
+
+        connection = mysql.connector.connect(host='localhost', user='root', password='', database='447')
+
+        if connection.is_connected():
+            print('Connected successfully')
+        else:
+            print('Failed to connect')
+
+        mycursor = connection.cursor(dictionary=True)
+        
+        mycursor.execute('SELECT * FROM fav_teams WHERE user_id = %s AND team_id = "%s"', (user_id, team_id))
+        user_exists = mycursor.fetchone()
+        
+        if method == 'add':
+                
+            if user_exists:
+                return jsonify({'error': 'Already favorited'})
+                
+            mycursor.execute(
+                "INSERT INTO fav_teams (user_id, username, team_id) VALUES (%s, %s, %s)",
+                (user_id, username, team_id)    
+        )
+            connection.commit()  # Commit the transaction
+            
+        else:
+            if not user_exists:
+                return jsonify({'error': 'Player/Team not favorited'})
+            mycursor.execute(
+                f"DELETE FROM fav_teams WHERE user_id = {user_id} AND team_id = '{team_id}'"
+            )
+            
+
+            connection.commit()  # Commit the transaction
+        
+        # mycursor.execute()
+        # columns = mycursor.column_names
+
+        # data = mycursor.fetchall()
+
+        # for x in results:
+        #     print(x)
+
+        mycursor.close()
+        connection.close()
+        
+        response = {
+            # 'columns': columns,
+            # 'data': data,
+            'message': f'Successfully {method}ed user: "{username}" favorites with player: "{team_id}"'
+        }
+        return response
+    
+    
+
+    except Exception as e:
+        return jsonify({'error': str(e)})
+    
     # -------------- GET FAV PLAYER -----------------
-@app.route('/getfavplayer', methods=['POST'])
-def get_fav_players():
+@app.route('/Userjoin', methods=['POST'])
+def Userjoin():
     try:
         fav_data = request.get_json()  
         # user_id = fav_data.get('userID')
         print(fav_data)
         curr_user = fav_data.get('currUser')
         other_user = fav_data.get('otherUser')
+        table = fav_data.get('table')
         # player_id = fav_data.get('playerID')
         # method = fav_data.get('type')
         print(f"curr and other: {curr_user}, {other_user}")
@@ -344,14 +415,22 @@ def get_fav_players():
             print('Failed to connect')
 
         mycursor = connection.cursor(dictionary=True)
-        
-        mycursor.execute(
-            f'SELECT fp.username, np.NAME, np.PPG, np.RPG, np.APG ' +
-            f'FROM fav_players fp ' +
-            f'JOIN fav_players fp2 ON fp.player_id = fp2.player_id  ' +
-            f'JOIN nbaplayers np ON fp.player_id = np.id ' +
-            f'WHERE fp2.username = "{curr_user}" and fp.username = "{other_user}"' 
-        )
+        if table == 'Players':
+            mycursor.execute(
+                f'SELECT fp.username, np.NAME, np.PPG, np.RPG, np.APG ' +
+                f'FROM fav_players fp ' +
+                f'JOIN fav_players fp2 ON fp.player_id = fp2.player_id  ' +
+                f'JOIN nbaplayers np ON fp.player_id = np.id ' +
+                f'WHERE fp2.username = "{curr_user}" and fp.username = "{other_user}"' 
+            )
+        elif table == 'Teams':
+            mycursor.execute(
+                f'SELECT fp.username, np.NAME, np.TEAM, np.season ' +
+                f'FROM fav_teams fp ' +
+                f'JOIN fav_teams fp2 ON fp.team_id = fp2.team_id  ' +
+                f'JOIN nbateams np ON fp.team_id = np.TEAM ' +
+                f'WHERE fp2.username = "{curr_user}" and fp.username = "{other_user}"' 
+            )
        
         
         # mycursor.execute()
@@ -376,6 +455,8 @@ def get_fav_players():
 
     except Exception as e:
         return jsonify({'error': str(e)})
+    
+
 
 if __name__ == '__main__':
     app.run(debug=True)

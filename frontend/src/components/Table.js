@@ -52,6 +52,32 @@ function SortableTableFunc({ columns, data, selectedPlayer, setSelectedPlayer })
             console.error('Error fetching data: ', error);
         }
     };
+    const setteamFav = async (userData) => {
+        try {
+            const response = await fetch('http://127.0.0.1:5000/setfavteam', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(userData),
+            });
+            const res = await response.json();
+            setRes(res);
+            // console.log(res)
+            if (res.error) {
+                navigate('/nba');
+                alert(res.error);
+            } else {
+                // alert(`Welcome, '${username}'!`)
+                // setUser(res.user.username);
+                // setIsLoggedIn(true);
+                
+ 
+            }
+
+            console.log('res: ', res);
+        } catch (error) {
+            console.error('Error fetching data: ', error);
+        }
+    };
 
     const fetchDataremovefav = async (userData) => {
         try {
@@ -92,7 +118,17 @@ function SortableTableFunc({ columns, data, selectedPlayer, setSelectedPlayer })
             let userData = JSON.parse(user);
             let username = userData.username;
             let userID = userData.id;
+            console.log('Selected player:', selectedPlayer);
+            if (selectedPlayer.id === undefined){
+                let removeDATA = {
+                    userID: userID,
+                    username: username,
+                    teamID: selectedPlayer.TEAM,
+                    type: 'remove'
+                }
+                setteamFav(removeDATA);
 
+            } else{
             let removeDATA = {
                 userID: userID,
                 username: username,
@@ -100,13 +136,28 @@ function SortableTableFunc({ columns, data, selectedPlayer, setSelectedPlayer })
                 type: 'remove'
             }
             setFav(removeDATA);
+            }
         } else {
+            
             setFavorites([...favorites, selectedPlayer.NAME]);
             let user = sessionStorage.getItem('user');
             let userData = JSON.parse(user);
             let userID = userData.id;
             let username = userData.username;
-            
+            console.log('Selected player:', selectedPlayer);
+            if(selectedPlayer.id === undefined){
+
+            let favDATA = {
+                // user: username,
+                userID: userID,
+                username: username,
+                // name: selectedPlayer.NAME,
+                teamID: selectedPlayer.TEAM,
+                type: 'add'
+
+            };
+            setteamFav(favDATA);
+        } else{
             let favDATA = {
                 // user: username,
                 userID: userID,
@@ -114,14 +165,11 @@ function SortableTableFunc({ columns, data, selectedPlayer, setSelectedPlayer })
                 // name: selectedPlayer.NAME,
                 playerID: selectedPlayer.id,
                 type: 'add'
-                // team: selectedPlayer.TEAM,
-                // pos: selectedPlayer.POS,
-                // ppg: selectedPlayer.PPG,
-                // rpg: selectedPlayer.RPG,
-                // apg: selectedPlayer.APG
+
             };
             setFav(favDATA);
 
+        }
             // NEED TO FIX THIS SO THAT IT WILL SHOW UP AS FAVORITED WHEN RELOADING, THIS COULD BE DONE BY QUERYING THE FAV TABLE AND SET THOSE PLAYERS TO FAVORTIED
             // WITH THE TOGGLE 
         }
@@ -194,6 +242,7 @@ function SortableTableFunc({ columns, data, selectedPlayer, setSelectedPlayer })
                 </CardBody>
             </ModalBody>
             <ModalFooter>
+            
         {selectedPlayer && favorites.includes(selectedPlayer.NAME) ? 
           <MdFavorite size={50} onClick={() => toggleFavorite(selectedPlayer?.NAME,selectedPlayer?.TEAM,selectedPlayer?.PPG,selectedPlayer?.RPG,selectedPlayer?.APG) } color='#e31b23'/> :
           <MdFavoriteBorder size={50} onClick={toggleFavorite} color='#e31b23'/> }

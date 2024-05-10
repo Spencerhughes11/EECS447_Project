@@ -22,6 +22,7 @@ export default function Community() {
   const [userData, setUserData] = useState([]);
   const [showTable, setShowTable] = useState(false);
   const [requestData, setRequestData] = useState();
+  const [selectedType, setSelectedType] = useState({ label: 'Choose a Table', value: 'Players'});
   // const requestData = {
   //   'query': 'SELECT * FROM users'
   // };
@@ -64,6 +65,7 @@ let queryInfo;
   const handleTeamChange = (selectedOption) => setSelectedTeam(selectedOption);
   const handleUserChange = (selectedOption) => setSelectedUser(selectedOption);
   const handleColsChange = (selectedOption) => setSelectedCols(selectedOption);
+  const handleTypeChange = (selectedOption) => setSelectedType(selectedOption);
   let user = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')) : '';
   let username = user.username;
     const toggleTable =  () => {
@@ -72,6 +74,7 @@ let queryInfo;
         queryInfo = {
           currUser: username,
           otherUser: selectedUser.value,
+          table: selectedType.value
         }
         console.log(queryInfo)
         setRequestData(queryInfo);
@@ -93,6 +96,7 @@ let queryInfo;
                     "Por", "Sac",  "San",  "Tor",
                     "Uta", "Was", 'all'
                 ].map(team => ({ label: team.toUpperCase(), value: team.toUpperCase() }));
+    const type = ['Players', 'Teams'].map(type => ({label: type, value: type}))
 
     const cols = ['PPG', 'APG', 'RPG','all'].map(col => ({ label: col, value: col }));
     return (
@@ -100,6 +104,14 @@ let queryInfo;
       
         <h1 className="m-3">Community</h1>
         <h4 className="">See who other users favorite teams and players are</h4>
+        <Container className="w-50 d-flex align-items-center justify-content-center">
+        <Select className='w-25 '
+          name="tye"
+          options={type}
+          onChange={handleTypeChange}
+          value={selectedType}
+        />
+        </Container>
         <Row className="m-3 w-75 d-flex align-items-center justify-content-center">
             <Col>
                 <Select
@@ -110,7 +122,7 @@ let queryInfo;
                 value={selectedUser}   
                 />
              </Col>
-            <Col>
+            {/* <Col>
                 <Select
                 // isMulti
                 name="position"
@@ -136,13 +148,13 @@ let queryInfo;
                 onChange={handleColsChange}
                 value={selectedCols}
                 />
-             </Col>
+             </Col> */}
              <Col>
                  <Button onClick={toggleTable}>Get Table</Button>
             </Col>
         </Row>
         {showTable && (
-            <Retreiveusers requestData={requestData} />             // **NOT currently using requestData as param
+            <Userjoin requestData={requestData} />             // **NOT currently using requestData as param
           // <span>{Retreiveusers({requestData})}</span>
         )}
       </div>
