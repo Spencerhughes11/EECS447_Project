@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Col, Container, Row, 
         Button, Table,Form, FormGroup, Input, Label} from "reactstrap";
-import Query from '../components/queries';
+import Query from '../components/MLBQueries';
 import NBAQuery from "../components/NBAQueries";
 // import DropdownMenu, {
 //     DropdownItemCheckbox,
@@ -222,7 +222,7 @@ export default function NBA() {
             />
          </Col> 
          <Col>
-             <Button onClick={toggleTable}>Ge t Table</Button>
+             <Button onClick={toggleTable}>Get Table</Button>
         </Col>
     </Row> }
         {showTable &&  (

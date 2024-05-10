@@ -1,34 +1,26 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import { useState, useEffect} from "react";
+import { useState} from "react";
 import { Container, Form, FormFeedback, FormGroup,
-       FormText, Label, Input, Button } from "reactstrap";
+        Label, Input } from "reactstrap";
 import './login.css';
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../auth/UserContext.js";
 import Header from "../components/Header.js";
 
 
-export default function SignUp(props) {
+export default function SignUp() {
     let navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [first, setFirst] = useState('');
     const [last, setLast] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [email, setEmail] = useState('');
-    const [showSignUp, setShowsignup] = useState(false);
+  
     const [res, setRes] = useState(null);
     const [touched, setTouched] = useState(false);
-    const [loggedInUser, setLoggedInUser] = useState(false);
-    const [loggedInID, setLoggedInID] = useState(false);
+  
     
-    const {user,
-            setUser,
-            isLoggedIn,
-            setIsLoggedIn} = useAuth();
-    // // error handling
-    // TODO: Change back to 8
+   
+
     const tooShort = password.length < 4;
     let notMatching = false;
     if (password !== confirmPassword) {
@@ -47,16 +39,11 @@ export default function SignUp(props) {
             });
             const res = await response.json();
             setRes(res);
-            // console.log(res)
             if (res.error) {
                 navigate('/signup');
                 alert(res.error);
             } else {
-                // alert(`Welcome, '${username}'!`)
-                // setUser(res.user.username);
-                // setIsLoggedIn(true);
                 navigate('/login');
- 
             }
 
             console.log('res: ', res);
@@ -65,9 +52,7 @@ export default function SignUp(props) {
         }
     };
 
-    // const userData = {
-
-    // // };
+ 
     
     function handlesignup() {
         // setShowsignup(!showSignUp);

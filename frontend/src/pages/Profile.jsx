@@ -1,8 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {Container, Input} from 'reactstrap';
-// import './Profile.css'
-import ReactRoundedImage from "react-rounded-image"
-import Image from "../images/basketball.svg"
+
 
 
 
@@ -11,52 +9,51 @@ export default function Profile() {
     let username = user.username;
     let firstName = user.first;
     let lastName = user.last;
-    let favorites = localStorage.getItem('favorites')  ? localStorage.getItem('favorites') : '';
-  
-    const [image, setImage] = useState(null);
-
-
+    const [favoritePlayers, setFavoritePlayers] = useState([]);
+    const [favoriteTeams, setFavoriteTeams] = useState([]);
 
     useEffect(() => {
-        const storedImage = sessionStorage.getItem('profilePic');
-        if (storedImage) {
-            setImage(storedImage);
-          }
-      }, [image]); // This tells React to call this effect whenever `image` changes
+        const fetchData = async () => {
+            try {
+              const response = await fetch('http://127.0.0.1:5000/retrievefavs', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: username}),
+            });
+                const data = await response.json();
+    
+                setFavoritePlayers(data.players);
+                setFavoriteTeams(data.teams);
+            } catch (error) {
+                console.error('Error fetching data: ', error);
+            }
+        };
+    
+        fetchData();
       
-      const handleImageChange = (event) => {
-        const selectedImage = URL.createObjectURL(event.target.files[0]);
-        setImage(selectedImage);
-        sessionStorage.setItem('profilePic', selectedImage);
+    }, []);
+    
 
-      };
     return (
-<Container className='d-flex w-50 h-75 bg-white rounded raised mt-5 justify-content-center align-items-center'>
-    <Container className='p-3 '>
+<Container className='d-flex w-50 h-75 bg-white rounded raised mt-5 justify-content-center '>
+    <Container className='mt-5'>
         <h1>Profile</h1> 
          <hr/>
-        <Container className='p-3 text-start d-flex justify-content-center'>
-            
-            {image ? 
-            <ReactRoundedImage image={Image} /> : <></>}
+        <Container className='p-4 text-start d-flex justify-content-center'>
         </Container>
-            {/* {!image ? */}
-            <div>
-                <input className='w-25'
-                type="file"
-                id="image"
-                accept='image/*'
-                onChange={handleImageChange}
-                />
-            </div> 
-        <Container>
-
-
+        
+        <Container className='p-4 justify-content-center'>
                     <h4>Username: <code>{username}</code></h4>
                     <br/>
                     <h4>Name: <code>{firstName} {lastName}</code> </h4><br/>
-                    <h4>Favorite Teams: <code></code></h4><br/>
-                    <h4>Favorite Players: <code>{favorites}</code></h4><br/>
+                    <h4>Favorite Teams:</h4>
+                        {favoriteTeams.map((team, index) => (
+                        <code key={index}>{team.NAME}, </code>
+                        ))}
+                    <h4>Favorite Players:</h4>
+                    {favoritePlayers.map((player, index) => (
+                    <code key={index}>{player.NAME}, </code>
+                    ))}
                 </Container>
             </Container>
         </Container>

@@ -22,7 +22,6 @@ function App() {
         <Routes>
           <Route element={<RequireUser />}>
             <Route path="/" element={<Home />} />
-            <Route path="/mlb" element={<MLB />} />
             <Route path="/nba" element={<NBA />} />
             <Route path="/community" element={<Community />} />
             <Route path="/test" element={<Test />} />
@@ -30,7 +29,6 @@ function App() {
           </Route>
           <Route index path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
-          {/* <Route path="/temp" element={<Query />} /> */}
         </Routes>
       </UserProvider>
 

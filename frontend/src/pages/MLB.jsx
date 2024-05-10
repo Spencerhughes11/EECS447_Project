@@ -1,27 +1,13 @@
-import React, { useState, useEffect } from "react";
-import { Col, Container, Row, 
-        Button, Table,Form, FormGroup, Input, Label} from "reactstrap";
-import Query from '../components/queries';
-import Header from '../components/Header';
-// import DropdownMenu, {
-//     DropdownItemCheckbox,
-//     DropdownItemCheckboxGroup,
-//   } from '@atlaskit/dropdown-menu';
+import React, { useState } from "react";
+import { Col , Row, 
+        Button} from "reactstrap";
+import Query from '../components/MLBQueries';
+
 import Select from 'react-select';
 
 
 export default function MLB() {
-    // const [requestData, setRequestData] = useState(null);
 
-    // // let handleRequest 
-
-    // const responseData = Temp({requestData});
-    // let requestData = {table: 'ship'}
-    // return(
-    //     <Container className="vh-100 ">
-    //         <Button>Click</Button>
-    //     </Container>
-    // );
     const [selectedYear, setSelectedYear] = useState({label: '2024', value: '2024'});
     const [selectedTeam, setSelectedTeam] = useState({ label: 'Kansas City Royals', value: 'Kansas City Royals' });
     const [selectedPositions, setSelectedPosition] = useState();
@@ -44,23 +30,11 @@ export default function MLB() {
     const [tableData, setTableData] = useState(null);
     const [requestData, setRequestData] = useState()
     const toggleTable =  () => {
-        // try {
-            // const requestData = { table: 'ship' };
-        //     const responseData = await Temp(requestData);
             let queryInfo = {
-                // table: selectedPositions,
                 year: selectedYear.value,
-                // team: selectedTeam,
-                // cols: selectedCols,
             }
-            // console.log(queryInfo.year.value);
             setRequestData(queryInfo);
             setShowTable(true);
-        //     console.log(tableData);
-        // } catch (error) {
-        //     console.error('Error fetching data: ', error);
-        console.log('Clicked');
-        // }
     };
     const years = ['2015', '2016', '2017', '2018', '2019', '2020',
                    '2021', '2022', '2023', '2024', 'all'].map(year => ({ label: year, value: year }));
@@ -83,7 +57,6 @@ export default function MLB() {
         <Row className="m-3 w-75 d-flex align-items-center justify-content-center">
             <Col>
                 <Select
-                // isMulti
                 name="position"
                 options={[
                     {label: 'Hitters', value: 'stats'},
@@ -95,7 +68,6 @@ export default function MLB() {
              </Col>
             <Col>
                 <Select
-                // isMulti
                 name="years"
                 options={years}
                 onChange={handleYearChange}
@@ -104,7 +76,6 @@ export default function MLB() {
              </Col>
             <Col>
                 <Select
-                // isMulti
                 name="team"
                 options={teams}
                 onChange={handleTeamChange}
@@ -125,7 +96,7 @@ export default function MLB() {
             </Col>
         </Row>
         {showTable &&  (
-            <Query requestData={requestData} />             // **NOT currently using requestData as param
+            <Query requestData={requestData} />             
 
         )}
       </div>
